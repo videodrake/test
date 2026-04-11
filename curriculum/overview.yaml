@@ -1,0 +1,326 @@
+title: "AI 신약개발 학습 프로그램"
+total_weeks: 20
+total_days: 100
+
+phases:
+  - number: 1
+    title: "ML/DL 기초"
+    description: "머신러닝과 딥러닝의 기초를 분자 데이터 맥락에서 학습"
+    weeks:
+      - number: 1
+        title: "Python 과학 컴퓨팅"
+        quiz_path: "phase1_ml_foundations/week1_python_ml/quiz/week1_quiz.yaml"
+        days:
+          - number: 1
+            title: "NumPy와 분자 데이터 처리"
+            content_path: "phase1_ml_foundations/week1_python_ml/day01.md"
+            exercises:
+              - id: "ex01"
+                title: "NumPy로 분자량 계산 및 Tanimoto 유사도 구현"
+          - number: 2
+            title: "Pandas로 분자 데이터 분석"
+            content_path: "phase1_ml_foundations/week1_python_ml/day02.md"
+            exercises:
+              - id: "ex02"
+                title: "분자 물성 CSV 로드, 정제, 통계 분석"
+          - number: 3
+            title: "과학 데이터 시각화"
+            content_path: "phase1_ml_foundations/week1_python_ml/day03.md"
+            exercises:
+              - id: "ex03"
+                title: "분자량 vs 용해도 산점도 및 화학 공간 PCA 시각화"
+          - number: 4
+            title: "ML을 위한 통계학"
+            content_path: "phase1_ml_foundations/week1_python_ml/day04.md"
+            exercises:
+              - id: "ex04"
+                title: "약물 유사성(Drug-likeness) 데이터셋의 통계 분석"
+          - number: 5
+            title: "선형대수와 분자 기술자"
+            content_path: "phase1_ml_foundations/week1_python_ml/day05.md"
+            exercises:
+              - id: "ex05"
+                title: "분자 기술자 행렬에서 PCA 직접 구현"
+
+      - number: 2
+        title: "scikit-learn으로 QSAR 모델링"
+        quiz_path: "phase1_ml_foundations/week2_ml_sklearn/quiz/week2_quiz.yaml"
+        days:
+          - number: 1
+            title: "지도학습과 QSAR 개요"
+            content_path: "phase1_ml_foundations/week2_ml_sklearn/day01.md"
+            exercises: []
+          - number: 2
+            title: "분류 모델: 활성/비활성 화합물"
+            content_path: "phase1_ml_foundations/week2_ml_sklearn/day02.md"
+            exercises: []
+          - number: 3
+            title: "모델 평가와 불균형 데이터"
+            content_path: "phase1_ml_foundations/week2_ml_sklearn/day03.md"
+            exercises: []
+          - number: 4
+            title: "특성 엔지니어링과 선택"
+            content_path: "phase1_ml_foundations/week2_ml_sklearn/day04.md"
+            exercises: []
+          - number: 5
+            title: "비지도 학습: 화학 공간 클러스터링"
+            content_path: "phase1_ml_foundations/week2_ml_sklearn/day05.md"
+            exercises: []
+
+      - number: 3
+        title: "PyTorch 딥러닝 기초"
+        quiz_path: "phase1_ml_foundations/week3_deep_learning/quiz/week3_quiz.yaml"
+        days:
+          - number: 1
+            title: "PyTorch 텐서와 자동미분"
+            content_path: "phase1_ml_foundations/week3_deep_learning/day01.md"
+            exercises: []
+          - number: 2
+            title: "피드포워드 신경망 구축"
+            content_path: "phase1_ml_foundations/week3_deep_learning/day02.md"
+            exercises: []
+          - number: 3
+            title: "학습 루프와 최적화"
+            content_path: "phase1_ml_foundations/week3_deep_learning/day03.md"
+            exercises: []
+          - number: 4
+            title: "정규화 기법"
+            content_path: "phase1_ml_foundations/week3_deep_learning/day04.md"
+            exercises: []
+          - number: 5
+            title: "CNN과 분자 시퀀스"
+            content_path: "phase1_ml_foundations/week3_deep_learning/day05.md"
+            exercises: []
+
+      - number: 4
+        title: "분자 데이터용 고급 딥러닝"
+        quiz_path: "phase1_ml_foundations/week4_dl_practice/quiz/week4_quiz.yaml"
+        days:
+          - number: 1
+            title: "그래프 신경망(GNN) 개요"
+            content_path: "phase1_ml_foundations/week4_dl_practice/day01.md"
+            exercises: []
+          - number: 2
+            title: "PyTorch Geometric 실습"
+            content_path: "phase1_ml_foundations/week4_dl_practice/day02.md"
+            exercises: []
+          - number: 3
+            title: "Attention 메커니즘"
+            content_path: "phase1_ml_foundations/week4_dl_practice/day03.md"
+            exercises: []
+          - number: 4
+            title: "전이학습과 사전학습"
+            content_path: "phase1_ml_foundations/week4_dl_practice/day04.md"
+            exercises: []
+          - number: 5
+            title: "Phase 1 종합 복습"
+            content_path: "phase1_ml_foundations/week4_dl_practice/day05.md"
+            exercises: []
+
+  - number: 2
+    title: "화학정보학"
+    description: "RDKit과 분자 표현, 화학 데이터 처리의 핵심 기술"
+    weeks:
+      - number: 1
+        title: "RDKit & 분자 표현"
+        days:
+          - number: 1
+            title: "RDKit 기초와 SMILES"
+            content_path: "phase2_cheminformatics/week1/day01.md"
+            exercises: []
+          - number: 2
+            title: "분자 지문(Fingerprints)"
+            content_path: "phase2_cheminformatics/week1/day02.md"
+            exercises: []
+          - number: 3
+            title: "분자 기술자와 Lipinski 규칙"
+            content_path: "phase2_cheminformatics/week1/day03.md"
+            exercises: []
+          - number: 4
+            title: "서브구조 검색과 스캐폴드"
+            content_path: "phase2_cheminformatics/week1/day04.md"
+            exercises: []
+          - number: 5
+            title: "3D 배좌 생성"
+            content_path: "phase2_cheminformatics/week1/day05.md"
+            exercises: []
+      - number: 2
+        title: "화학 데이터베이스 & 처리"
+        days:
+          - number: 1
+            title: "ChEMBL과 PubChem"
+            content_path: "phase2_cheminformatics/week2/day01.md"
+            exercises: []
+          - number: 2
+            title: "데이터 정제 파이프라인"
+            content_path: "phase2_cheminformatics/week2/day02.md"
+            exercises: []
+          - number: 3
+            title: "화학 공간 시각화"
+            content_path: "phase2_cheminformatics/week2/day03.md"
+            exercises: []
+          - number: 4
+            title: "반응 정보학"
+            content_path: "phase2_cheminformatics/week2/day04.md"
+            exercises: []
+          - number: 5
+            title: "MMP와 SAR 분석"
+            content_path: "phase2_cheminformatics/week2/day05.md"
+            exercises: []
+      - number: 3
+        title: "ML용 분자 표현"
+        days:
+          - number: 1
+            title: "SMILES 토큰화와 SELFIES"
+            content_path: "phase2_cheminformatics/week3/day01.md"
+            exercises: []
+          - number: 2
+            title: "분자 그래프 구축"
+            content_path: "phase2_cheminformatics/week3/day02.md"
+            exercises: []
+          - number: 3
+            title: "3D 표현 기법"
+            content_path: "phase2_cheminformatics/week3/day03.md"
+            exercises: []
+          - number: 4
+            title: "사전학습 임베딩"
+            content_path: "phase2_cheminformatics/week3/day04.md"
+            exercises: []
+          - number: 5
+            title: "표현 방식 벤치마크"
+            content_path: "phase2_cheminformatics/week3/day05.md"
+            exercises: []
+      - number: 4
+        title: "고급 화학정보학"
+        days:
+          - number: 1
+            title: "호변이성체와 입체화학"
+            content_path: "phase2_cheminformatics/week4/day01.md"
+            exercises: []
+          - number: 2
+            title: "약물작용단 모델링"
+            content_path: "phase2_cheminformatics/week4/day02.md"
+            exercises: []
+          - number: 3
+            title: "QSAR 모범 사례"
+            content_path: "phase2_cheminformatics/week4/day03.md"
+            exercises: []
+          - number: 4
+            title: "고급 유사성 측정"
+            content_path: "phase2_cheminformatics/week4/day04.md"
+            exercises: []
+          - number: 5
+            title: "Phase 2 종합 복습"
+            content_path: "phase2_cheminformatics/week4/day05.md"
+            exercises: []
+
+  - number: 3
+    title: "AI 신약개발"
+    description: "분자 물성 예측, 생성 모델, 가상 스크리닝, De Novo 설계"
+    weeks:
+      - number: 1
+        title: "물성 예측 모델"
+        days:
+          - { number: 1, title: "MoleculeNet 벤치마크", content_path: "phase3_ai_drug_discovery/week1/day01.md", exercises: [] }
+          - { number: 2, title: "MPNN 구현", content_path: "phase3_ai_drug_discovery/week1/day02.md", exercises: [] }
+          - { number: 3, title: "다중과제 학습", content_path: "phase3_ai_drug_discovery/week1/day03.md", exercises: [] }
+          - { number: 4, title: "불확실성 정량화", content_path: "phase3_ai_drug_discovery/week1/day04.md", exercises: [] }
+          - { number: 5, title: "능동학습", content_path: "phase3_ai_drug_discovery/week1/day05.md", exercises: [] }
+      - number: 2
+        title: "분자 생성"
+        days:
+          - { number: 1, title: "SMILES RNN 생성", content_path: "phase3_ai_drug_discovery/week2/day01.md", exercises: [] }
+          - { number: 2, title: "분자 VAE", content_path: "phase3_ai_drug_discovery/week2/day02.md", exercises: [] }
+          - { number: 3, title: "강화학습 최적화", content_path: "phase3_ai_drug_discovery/week2/day03.md", exercises: [] }
+          - { number: 4, title: "목표지향 생성", content_path: "phase3_ai_drug_discovery/week2/day04.md", exercises: [] }
+          - { number: 5, title: "Gemma4 LLM 분자 생성", content_path: "phase3_ai_drug_discovery/week2/day05.md", exercises: [] }
+      - number: 3
+        title: "가상 스크리닝"
+        days:
+          - { number: 1, title: "VS 워크플로우", content_path: "phase3_ai_drug_discovery/week3/day01.md", exercises: [] }
+          - { number: 2, title: "리간드 기반 VS", content_path: "phase3_ai_drug_discovery/week3/day02.md", exercises: [] }
+          - { number: 3, title: "구조 기반 VS 기초", content_path: "phase3_ai_drug_discovery/week3/day03.md", exercises: [] }
+          - { number: 4, title: "ML 스코어링 함수", content_path: "phase3_ai_drug_discovery/week3/day04.md", exercises: [] }
+          - { number: 5, title: "합의 스코어링", content_path: "phase3_ai_drug_discovery/week3/day05.md", exercises: [] }
+      - number: 4
+        title: "De Novo 약물 설계"
+        days:
+          - { number: 1, title: "프래그먼트 기반 설계", content_path: "phase3_ai_drug_discovery/week4/day01.md", exercises: [] }
+          - { number: 2, title: "스캐폴드 홉", content_path: "phase3_ai_drug_discovery/week4/day02.md", exercises: [] }
+          - { number: 3, title: "합성 가능성 예측", content_path: "phase3_ai_drug_discovery/week4/day03.md", exercises: [] }
+          - { number: 4, title: "Gemma4 역합성 추론", content_path: "phase3_ai_drug_discovery/week4/day04.md", exercises: [] }
+          - { number: 5, title: "Phase 3 종합 복습", content_path: "phase3_ai_drug_discovery/week4/day05.md", exercises: [] }
+
+  - number: 4
+    title: "고급 주제"
+    description: "단백질 구조, 도킹, MD 시뮬레이션, ADMET 예측"
+    weeks:
+      - number: 1
+        title: "단백질 구조 & 도킹"
+        days:
+          - { number: 1, title: "PDB와 단백질 구조", content_path: "phase4_advanced_topics/week1/day01.md", exercises: [] }
+          - { number: 2, title: "AutoDock Vina 도킹", content_path: "phase4_advanced_topics/week1/day02.md", exercises: [] }
+          - { number: 3, title: "포즈 예측과 리스코어링", content_path: "phase4_advanced_topics/week1/day03.md", exercises: [] }
+          - { number: 4, title: "ESM 단백질 임베딩", content_path: "phase4_advanced_topics/week1/day04.md", exercises: [] }
+          - { number: 5, title: "단백질-리간드 상호작용 지문", content_path: "phase4_advanced_topics/week1/day05.md", exercises: [] }
+      - number: 2
+        title: "분자 동역학"
+        days:
+          - { number: 1, title: "OpenMM MD 기초", content_path: "phase4_advanced_topics/week2/day01.md", exercises: [] }
+          - { number: 2, title: "MD 궤적 분석", content_path: "phase4_advanced_topics/week2/day02.md", exercises: [] }
+          - { number: 3, title: "자유에너지 섭동(FEP)", content_path: "phase4_advanced_topics/week2/day03.md", exercises: [] }
+          - { number: 4, title: "ML 가속 MD", content_path: "phase4_advanced_topics/week2/day04.md", exercises: [] }
+          - { number: 5, title: "Gemma4 MD 결과 해석", content_path: "phase4_advanced_topics/week2/day05.md", exercises: [] }
+      - number: 3
+        title: "ADMET 예측"
+        days:
+          - { number: 1, title: "ADMET 데이터 수집", content_path: "phase4_advanced_topics/week3/day01.md", exercises: [] }
+          - { number: 2, title: "흡수/분포 모델링", content_path: "phase4_advanced_topics/week3/day02.md", exercises: [] }
+          - { number: 3, title: "대사 예측", content_path: "phase4_advanced_topics/week3/day03.md", exercises: [] }
+          - { number: 4, title: "독성 예측", content_path: "phase4_advanced_topics/week3/day04.md", exercises: [] }
+          - { number: 5, title: "다중 파라미터 최적화", content_path: "phase4_advanced_topics/week3/day05.md", exercises: [] }
+      - number: 4
+        title: "최신 기술"
+        days:
+          - { number: 1, title: "분자 확산 모델", content_path: "phase4_advanced_topics/week4/day01.md", exercises: [] }
+          - { number: 2, title: "SE(3)-동변 네트워크", content_path: "phase4_advanced_topics/week4/day02.md", exercises: [] }
+          - { number: 3, title: "화학 파운데이션 모델", content_path: "phase4_advanced_topics/week4/day03.md", exercises: [] }
+          - { number: 4, title: "항체 설계 AI", content_path: "phase4_advanced_topics/week4/day04.md", exercises: [] }
+          - { number: 5, title: "Phase 4 종합 복습", content_path: "phase4_advanced_topics/week4/day05.md", exercises: [] }
+
+  - number: 5
+    title: "파이프라인 구축"
+    description: "E2E 신약개발 도구 개발, LLM 통합, 캡스톤 프로젝트"
+    weeks:
+      - number: 1
+        title: "소프트웨어 공학"
+        days:
+          - { number: 1, title: "파이프라인 아키텍처", content_path: "phase5_pipeline_building/week1/day01.md", exercises: [] }
+          - { number: 2, title: "실험 추적(MLflow)", content_path: "phase5_pipeline_building/week1/day02.md", exercises: [] }
+          - { number: 3, title: "재현성과 컨테이너화", content_path: "phase5_pipeline_building/week1/day03.md", exercises: [] }
+          - { number: 4, title: "과학 소프트웨어 테스팅", content_path: "phase5_pipeline_building/week1/day04.md", exercises: [] }
+          - { number: 5, title: "CLI/API 설계", content_path: "phase5_pipeline_building/week1/day05.md", exercises: [] }
+      - number: 2
+        title: "E2E 파이프라인"
+        days:
+          - { number: 1, title: "타겟 준비 모듈", content_path: "phase5_pipeline_building/week2/day01.md", exercises: [] }
+          - { number: 2, title: "히트 발견 모듈", content_path: "phase5_pipeline_building/week2/day02.md", exercises: [] }
+          - { number: 3, title: "리드 최적화 모듈", content_path: "phase5_pipeline_building/week2/day03.md", exercises: [] }
+          - { number: 4, title: "보고서 생성 모듈", content_path: "phase5_pipeline_building/week2/day04.md", exercises: [] }
+          - { number: 5, title: "파이프라인 통합", content_path: "phase5_pipeline_building/week2/day05.md", exercises: [] }
+      - number: 3
+        title: "LLM 통합"
+        days:
+          - { number: 1, title: "Gemma4 화학 에이전트", content_path: "phase5_pipeline_building/week3/day01.md", exercises: [] }
+          - { number: 2, title: "화학 문헌 RAG", content_path: "phase5_pipeline_building/week3/day02.md", exercises: [] }
+          - { number: 3, title: "가설 생성", content_path: "phase5_pipeline_building/week3/day03.md", exercises: [] }
+          - { number: 4, title: "멀티모달 분자 AI", content_path: "phase5_pipeline_building/week3/day04.md", exercises: [] }
+          - { number: 5, title: "모델 배포", content_path: "phase5_pipeline_building/week3/day05.md", exercises: [] }
+      - number: 4
+        title: "캡스톤 프로젝트"
+        days:
+          - { number: 1, title: "캡스톤 설계", content_path: "phase5_pipeline_building/week4/day01.md", exercises: [] }
+          - { number: 2, title: "캡스톤 구현 1", content_path: "phase5_pipeline_building/week4/day02.md", exercises: [] }
+          - { number: 3, title: "캡스톤 구현 2", content_path: "phase5_pipeline_building/week4/day03.md", exercises: [] }
+          - { number: 4, title: "캡스톤 구현 3", content_path: "phase5_pipeline_building/week4/day04.md", exercises: [] }
+          - { number: 5, title: "최종 발표 & 포트폴리오", content_path: "phase5_pipeline_building/week4/day05.md", exercises: [] }

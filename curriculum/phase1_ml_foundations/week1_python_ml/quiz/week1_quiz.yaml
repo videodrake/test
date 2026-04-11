@@ -56,3 +56,58 @@ questions:
       - "주성분 간의 상관관계"
     answer: "0"
     explanation: "설명된 분산비는 각 주성분의 고유값을 전체 고유값의 합으로 나눈 것입니다. 이를 통해 소수의 주성분으로 원본 데이터의 정보를 얼마나 보존하는지 판단할 수 있습니다. 보통 누적 95%를 기준으로 주성분 수를 결정합니다."
+
+  - id: "w1q6"
+    question: "분자 데이터 시각화에서 색맹 친화적 colormap으로 가장 적합한 것은?"
+    type: "multiple_choice"
+    options:
+      - "jet"
+      - "rainbow"
+      - "viridis"
+      - "hot"
+    answer: "2"
+    explanation: "viridis는 밝기가 균일하게 증가하고, 색맹이 있는 사람도 구분할 수 있도록 설계된 colormap입니다. jet과 rainbow는 밝기가 불균일하고 색맹 친화적이지 않아 과학 논문에서는 권장하지 않습니다."
+
+  - id: "w1q7"
+    question: "IC50 값을 ML 모델에 사용하기 전에 pIC50(-log10)로 변환하는 이유는?"
+    type: "multiple_choice"
+    options:
+      - "pIC50가 더 작은 숫자여서 계산이 빨라지므로"
+      - "IC50는 로그정규분포를 따르므로 변환 후 정규분포에 가까워져 ML 모델에 적합하기 때문"
+      - "pIC50가 국제 표준 단위이기 때문"
+      - "변환하지 않으면 Python에서 오류가 발생하기 때문"
+    answer: "1"
+    explanation: "IC50 값은 보통 수 nM ~ 수 μM 범위로 극단적으로 치우친 분포를 가집니다. -log10 변환 후에는 정규분포에 가까워져 ML 알고리즘(특히 선형 모델)이 더 잘 학습할 수 있습니다. 또한 pIC50가 높을수록 활성이 강하므로 직관적입니다."
+
+  - id: "w1q8"
+    question: "Pearson 상관계수와 Spearman 상관계수의 핵심 차이는?"
+    type: "multiple_choice"
+    options:
+      - "Pearson은 선형 관계를, Spearman은 단조(monotonic) 관계를 측정한다"
+      - "Pearson은 더 정확하고 Spearman은 근사값이다"
+      - "Pearson은 분류에, Spearman은 회귀에 사용한다"
+      - "Pearson은 범주형 데이터에, Spearman은 연속형 데이터에 사용한다"
+    answer: "0"
+    explanation: "Pearson r은 두 변수 간의 선형 관계 강도를 측정합니다. Spearman ρ는 순위(rank) 기반으로 단조 관계를 측정하므로 비선형 관계도 포착할 수 있고, 정규분포 가정이 필요 없습니다."
+
+  - id: "w1q9"
+    question: "PCA에서 공분산 행렬의 고유벡터(eigenvector)가 의미하는 것은?"
+    type: "multiple_choice"
+    options:
+      - "데이터의 평균 방향"
+      - "데이터에서 분산이 가장 큰 방향(주성분)"
+      - "데이터 포인트의 개수"
+      - "각 특성의 최소값"
+    answer: "1"
+    explanation: "공분산 행렬의 고유벡터는 데이터의 분산이 최대인 방향을 나타냅니다. 첫 번째 고유벡터(가장 큰 고유값에 대응)가 첫 번째 주성분(PC1)이 되며, 데이터의 가장 많은 정보를 담고 있는 방향입니다."
+
+  - id: "w1q10"
+    question: "200개 분자 기술자에서 PCA로 차원을 축소할 때, 주성분 수를 결정하는 일반적인 기준은?"
+    type: "multiple_choice"
+    options:
+      - "항상 2개로 줄인다"
+      - "원래 차원의 절반(100개)을 사용한다"
+      - "누적 설명된 분산비가 95% 이상이 되는 최소 주성분 수를 선택한다"
+      - "기술자 중 p-value < 0.05인 것만 남긴다"
+    answer: "2"
+    explanation: "누적 설명된 분산비 95%는 원본 데이터 정보의 95%를 보존하면서 차원을 줄이는 기준입니다. 이를 Elbow plot으로 시각화하여 분산비가 급격히 감소하는 지점(elbow)을 찾는 것도 좋은 방법입니다."

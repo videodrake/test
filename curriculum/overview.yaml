@@ -23,24 +23,28 @@ phases:
             exercises:
               - id: "ex02"
                 title: "분자 물성 CSV 로드, 정제, 통계 분석"
+                file_path: "exercises/phase1/week1/ex02_pandas_moldata.py"
           - number: 3
             title: "과학 데이터 시각화"
             content_path: "phase1_ml_foundations/week1_python_ml/day03.md"
             exercises:
               - id: "ex03"
                 title: "분자량 vs 용해도 산점도 및 화학 공간 PCA 시각화"
+                file_path: "exercises/phase1/week1/ex03_visualization.py"
           - number: 4
             title: "ML을 위한 통계학"
             content_path: "phase1_ml_foundations/week1_python_ml/day04.md"
             exercises:
               - id: "ex04"
                 title: "약물 유사성(Drug-likeness) 데이터셋의 통계 분석"
+                file_path: "exercises/phase1/week1/ex04_statistics.py"
           - number: 5
             title: "선형대수와 분자 기술자"
             content_path: "phase1_ml_foundations/week1_python_ml/day05.md"
             exercises:
               - id: "ex05"
                 title: "분자 기술자 행렬에서 PCA 직접 구현"
+                file_path: "exercises/phase1/week1/ex05_linalg_descriptors.py"
 
       - number: 2
         title: "scikit-learn으로 QSAR 모델링"

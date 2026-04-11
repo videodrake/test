@@ -5,6 +5,8 @@ dist/
 build/
 .eggs/
 *.egg
+.venv/
+venv/
 
 data/progress.json
 models/*
@@ -14,5 +16,6 @@ models/*
 *.log
 .vscode/
 .idea/
+.DS_Store
 
 notebooks/.ipynb_checkpoints/

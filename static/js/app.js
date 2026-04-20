@@ -462,5 +462,52 @@ async function loadProgressView() {
     }
 }
 
+// === 데이터 동기화 ===
+function exportProgress() {
+    const data = loadProgress();
+    if (!data) { showToast('저장된 진도가 없습니다.'); return; }
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    const textarea = document.getElementById('sync-data');
+    textarea.value = encoded;
+    textarea.select();
+    navigator.clipboard.writeText(encoded).then(
+        () => showToast('동기화 코드가 클립보드에 복사되었습니다!'),
+        () => showToast('코드가 생성되었습니다. 직접 복사하세요.')
+    );
+}
+
+async function importProgress() {
+    const textarea = document.getElementById('sync-data');
+    let raw = textarea.value.trim();
+    if (!raw) {
+        try {
+            raw = await navigator.clipboard.readText();
+            textarea.value = raw;
+        } catch {
+            showToast('동기화 코드를 붙여넣기 해주세요.');
+            return;
+        }
+    }
+    try {
+        const json = decodeURIComponent(escape(atob(raw)));
+        const data = JSON.parse(json);
+        if (!data.user || !data.phases || !data.streak) throw new Error('invalid');
+        saveProgress(data);
+        showToast('진도를 성공적으로 가져왔습니다!');
+        loadDashboard();
+    } catch {
+        showToast('잘못된 동기화 코드입니다.');
+    }
+}
+
+async function resetProgress() {
+    if (!confirm('모든 진도가 초기화됩니다. 계속할까요?')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    _overviewCache = null;
+    await ensureProgress();
+    showToast('진도가 초기화되었습니다.');
+    loadDashboard();
+}
+
 // === Init ===
 document.addEventListener('DOMContentLoaded', () => { loadDashboard(); });

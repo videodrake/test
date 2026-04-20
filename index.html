@@ -242,6 +242,18 @@
                 <h3>퀴즈 이력</h3>
                 <div id="quiz-history-list"></div>
             </div>
+            <div class="card">
+                <h3>데이터 동기화</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+                    PC와 모바일 간 진도를 동기화합니다. 한쪽에서 내보내고 다른 쪽에서 가져오세요.
+                </p>
+                <div class="sync-buttons">
+                    <button class="btn btn-outline" onclick="exportProgress()">내보내기</button>
+                    <button class="btn btn-outline" onclick="importProgress()">가져오기</button>
+                    <button class="btn btn-outline" style="color: var(--red); border-color: var(--red);" onclick="resetProgress()">초기화</button>
+                </div>
+                <textarea id="sync-data" class="sync-textarea" placeholder="여기에 동기화 코드가 표시됩니다..." rows="4"></textarea>
+            </div>
         </section>
     </main>
 

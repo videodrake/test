@@ -463,10 +463,56 @@ async function loadProgressView() {
 }
 
 // === 데이터 동기화 ===
+
+function compressData(data) {
+    const json = JSON.stringify(data);
+    return btoa(unescape(encodeURIComponent(json)));
+}
+
+function decompressData(encoded) {
+    const json = decodeURIComponent(escape(atob(encoded)));
+    const data = JSON.parse(json);
+    if (!data.user || !data.phases || !data.streak) throw new Error('invalid');
+    return data;
+}
+
+function getSyncUrl() {
+    const data = loadProgress();
+    if (!data) return null;
+    const base = location.href.split('#')[0].split('?')[0];
+    return base + '?sync=' + compressData(data);
+}
+
+function shareProgress() {
+    const data = loadProgress();
+    if (!data) { showToast('저장된 진도가 없습니다.'); return; }
+
+    const url = getSyncUrl();
+
+    if (navigator.share) {
+        navigator.share({
+            title: 'DrugAI Lab 진도 동기화',
+            text: '다른 기기에서 이 링크를 열면 진도가 자동으로 동기화됩니다.',
+            url: url,
+        }).catch(() => {});
+        return;
+    }
+
+    navigator.clipboard.writeText(url).then(
+        () => showToast('동기화 링크가 복사되었습니다! 다른 기기에서 열어보세요.'),
+        () => {
+            const textarea = document.getElementById('sync-data');
+            textarea.value = url;
+            textarea.select();
+            showToast('링크를 직접 복사하세요.');
+        }
+    );
+}
+
 function exportProgress() {
     const data = loadProgress();
     if (!data) { showToast('저장된 진도가 없습니다.'); return; }
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    const encoded = compressData(data);
     const textarea = document.getElementById('sync-data');
     textarea.value = encoded;
     textarea.select();
@@ -480,20 +526,13 @@ async function importProgress() {
     const textarea = document.getElementById('sync-data');
     let raw = textarea.value.trim();
     if (!raw) {
-        try {
-            raw = await navigator.clipboard.readText();
-            textarea.value = raw;
-        } catch {
-            showToast('동기화 코드를 붙여넣기 해주세요.');
-            return;
-        }
+        try { raw = await navigator.clipboard.readText(); textarea.value = raw; }
+        catch { showToast('동기화 코드를 붙여넣기 해주세요.'); return; }
     }
     try {
-        const json = decodeURIComponent(escape(atob(raw)));
-        const data = JSON.parse(json);
-        if (!data.user || !data.phases || !data.streak) throw new Error('invalid');
+        const data = decompressData(raw);
         saveProgress(data);
-        showToast('진도를 성공적으로 가져왔습니다!');
+        showToast('진도를 가져왔습니다!');
         loadDashboard();
     } catch {
         showToast('잘못된 동기화 코드입니다.');
@@ -509,5 +548,35 @@ async function resetProgress() {
     loadDashboard();
 }
 
+function checkSyncFromUrl() {
+    const params = new URLSearchParams(location.search);
+    const syncData = params.get('sync');
+    if (!syncData) return false;
+
+    try {
+        const data = decompressData(syncData);
+        const existing = loadProgress();
+
+        if (existing && existing.user.start_date) {
+            const pos = `Phase ${data.user.current_phase} Week ${data.user.current_week} Day ${data.user.current_day}`;
+            if (!confirm(`진도를 가져올까요?\n\n가져올 진도: ${pos}\n\n기존 데이터가 덮어씌워집니다.`)) {
+                history.replaceState(null, '', location.pathname);
+                return false;
+            }
+        }
+
+        saveProgress(data);
+        history.replaceState(null, '', location.pathname);
+        showToast('진도가 자동으로 동기화되었습니다!');
+        return true;
+    } catch {
+        history.replaceState(null, '', location.pathname);
+        return false;
+    }
+}
+
 // === Init ===
-document.addEventListener('DOMContentLoaded', () => { loadDashboard(); });
+document.addEventListener('DOMContentLoaded', () => {
+    checkSyncFromUrl();
+    loadDashboard();
+});

@@ -53,23 +53,33 @@ phases:
           - number: 1
             title: "지도학습과 QSAR 개요"
             content_path: "phase1_ml_foundations/week2_ml_sklearn/day01.md"
-            exercises: []
+            exercises:
+              - id: "ex06"
+                title: "첫 번째 QSAR 모델 — 용해도 예측"
           - number: 2
             title: "분류 모델: 활성/비활성 화합물"
             content_path: "phase1_ml_foundations/week2_ml_sklearn/day02.md"
-            exercises: []
+            exercises:
+              - id: "ex07"
+                title: "활성/비활성 분류기 (LogReg, DT, RF)"
           - number: 3
             title: "모델 평가와 불균형 데이터"
             content_path: "phase1_ml_foundations/week2_ml_sklearn/day03.md"
-            exercises: []
+            exercises:
+              - id: "ex08"
+                title: "모델 평가와 불균형 처리"
           - number: 4
             title: "특성 엔지니어링과 선택"
             content_path: "phase1_ml_foundations/week2_ml_sklearn/day04.md"
-            exercises: []
+            exercises:
+              - id: "ex09"
+                title: "특성 엔지니어링과 선택"
           - number: 5
             title: "비지도 학습: 화학 공간 클러스터링"
             content_path: "phase1_ml_foundations/week2_ml_sklearn/day05.md"
-            exercises: []
+            exercises:
+              - id: "ex10"
+                title: "화학 공간 클러스터링"
 
       - number: 3
         title: "PyTorch 딥러닝 기초"
@@ -78,23 +88,33 @@ phases:
           - number: 1
             title: "PyTorch 텐서와 자동미분"
             content_path: "phase1_ml_foundations/week3_deep_learning/day01.md"
-            exercises: []
+            exercises:
+              - id: "ex11"
+                title: "PyTorch 텐서와 자동미분 기초"
           - number: 2
             title: "피드포워드 신경망 구축"
             content_path: "phase1_ml_foundations/week3_deep_learning/day02.md"
-            exercises: []
+            exercises:
+              - id: "ex12"
+                title: "피드포워드 NN으로 분자 물성 예측"
           - number: 3
             title: "학습 루프와 최적화"
             content_path: "phase1_ml_foundations/week3_deep_learning/day03.md"
-            exercises: []
+            exercises:
+              - id: "ex13"
+                title: "완전한 학습 루프 구현"
           - number: 4
             title: "정규화 기법"
             content_path: "phase1_ml_foundations/week3_deep_learning/day04.md"
-            exercises: []
+            exercises:
+              - id: "ex14"
+                title: "정규화 비교 실험"
           - number: 5
             title: "CNN과 분자 시퀀스"
             content_path: "phase1_ml_foundations/week3_deep_learning/day05.md"
-            exercises: []
+            exercises:
+              - id: "ex15"
+                title: "SMILES CNN 물성 예측"
 
       - number: 4
         title: "분자 데이터용 고급 딥러닝"
@@ -103,19 +123,27 @@ phases:
           - number: 1
             title: "그래프 신경망(GNN) 개요"
             content_path: "phase1_ml_foundations/week4_dl_practice/day01.md"
-            exercises: []
+            exercises:
+              - id: "ex16"
+                title: "GCN 직접 구현"
           - number: 2
             title: "PyTorch Geometric 실습"
             content_path: "phase1_ml_foundations/week4_dl_practice/day02.md"
-            exercises: []
+            exercises:
+              - id: "ex17"
+                title: "PyG 분자 GNN"
           - number: 3
             title: "Attention 메커니즘"
             content_path: "phase1_ml_foundations/week4_dl_practice/day03.md"
-            exercises: []
+            exercises:
+              - id: "ex18"
+                title: "SMILES Self-Attention"
           - number: 4
             title: "전이학습과 사전학습"
             content_path: "phase1_ml_foundations/week4_dl_practice/day04.md"
-            exercises: []
+            exercises:
+              - id: "ex19"
+                title: "전이학습 실험"
           - number: 5
             title: "Phase 1 종합 복습"
             content_path: "phase1_ml_foundations/week4_dl_practice/day05.md"

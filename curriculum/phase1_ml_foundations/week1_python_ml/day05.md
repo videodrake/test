@@ -60,6 +60,24 @@ V: 고유벡터 행렬 (주성분의 방향)
 Λ: 고유값 대각행렬 (각 방향의 분산 크기)
 ```
 
+### 중요: PCA 전에 반드시 표준화(Scaling)
+
+PCA는 분산을 기준으로 주성분을 찾기 때문에, **스케일이 큰 기술자가 지배적**이 됩니다.
+
+```python
+from sklearn.preprocessing import StandardScaler
+
+# 나쁜 예: 표준화 없이 PCA → MW(수백)가 logP(0~5)를 압도
+pca_bad = PCA(n_components=2).fit_transform(X)  # MW가 PC1 지배
+
+# 좋은 예: 표준화 후 PCA → 모든 기술자가 공평하게 기여
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)  # 각 컬럼을 평균=0, 표준편차=1로
+pca_good = PCA(n_components=2).fit_transform(X_scaled)
+```
+
+> **규칙**: PCA, t-SNE, UMAP 등 거리 기반 차원 축소를 쓸 때는 항상 표준화(StandardScaler)를 먼저 적용하세요. 유일한 예외는 이미 같은 스케일인 데이터(예: 비트 지문 0/1)입니다.
+
 ### PCA의 수학적 기반 - 단계별 구현
 
 ```python

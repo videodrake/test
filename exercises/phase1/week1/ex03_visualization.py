@@ -57,7 +57,7 @@ def plot_mw_vs_logp(data: dict, save_path: str | None = None):
 
     요구사항:
     - colorbar 추가 (label: "pIC50")
-    - Lipinski 기준선 표시 (MW=500 가로선, logP=5 세로선)
+    - Lipinski 기준선 표시 (MW=500 세로선, logP=5 가로선)
     - 색맹 친화적 colormap (viridis)
     """
     # TODO: 구현하세요

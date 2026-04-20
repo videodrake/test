@@ -20,7 +20,7 @@ def create_sample_data() -> pd.DataFrame:
     분석할 샘플 분자 데이터를 생성합니다.
 
     Returns:
-        컬럼: name, smiles, MW, logP, HBD, HBA, TPSA, scaffold, activity
+        컬럼: name, MW, logP, HBD, HBA, TPSA, scaffold, activity
     """
     np.random.seed(42)
     n = 100

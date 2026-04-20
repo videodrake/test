@@ -37,6 +37,14 @@ drug_like = df[
 print(f"Drug-like: {len(drug_like)}/{len(df)} ({len(drug_like)/len(df)*100:.1f}%)")
 ```
 
+### SMILES: 분자 구조의 텍스트 표현
+SMILES(Simplified Molecular Input Line Entry System)는 분자를 문자열로 나타냅니다:
+- `CC(=O)Oc1ccccc1C(=O)O` → 아스피린
+- `CC(=O)Nc1ccc(O)cc1` → 아세트아미노펜
+- `CC(C)Cc1ccc(cc1)C(C)C(=O)O` → 이부프로펜
+
+이후 Phase 2에서 RDKit으로 SMILES를 본격적으로 다루지만, Pandas에서는 이를 일반 문자열 컬럼으로 관리합니다.
+
 ### 결측치 처리 전략
 분자 데이터에서 결측치는 흔합니다:
 - **계산 불가**: 일부 기술자가 특정 분자에서 정의되지 않음
@@ -47,17 +55,28 @@ print(f"Drug-like: {len(drug_like)}/{len(df)} ({len(drug_like)/len(df)*100:.1f}%
 # 결측치 확인
 df.isnull().sum()
 
-# 전략 1: 제거 (데이터 충분할 때)
+# 전략 1: 제거 — 타겟 값(활성)이 없는 행 (대체 불가)
 df_clean = df.dropna(subset=['activity'])
 
-# 전략 2: 중앙값 대체 (물성 기술자)
-df['logP'].fillna(df['logP'].median(), inplace=True)
+# 전략 2: 중앙값 대체 — 물성 기술자 (분포가 치우치지 않을 때)
+df['logP'] = df['logP'].fillna(df['logP'].median())
 
-# 전략 3: 그룹별 대체 (화학 클래스별)
+# 전략 3: 그룹별 대체 — 같은 scaffold 내에서 대체 (가장 화학적으로 합리적)
 df['logP'] = df.groupby('scaffold')['logP'].transform(
     lambda x: x.fillna(x.median())
 )
+# 그룹 내에서도 전부 NaN이면 전체 중앙값으로 폴백
+df['logP'] = df['logP'].fillna(df['logP'].median())
 ```
+
+**어떤 전략을 선택할까?**
+
+| 상황 | 전략 | 이유 |
+|------|------|------|
+| 타겟 값(활성) 결측 | 제거 | 타겟 없이는 학습 불가 |
+| 기술자 결측 < 5% | 중앙값 대체 | 영향 미미 |
+| 기술자 결측 5-20% | 그룹별 대체 | 화학적 유사체로 추정 |
+| 기술자 결측 > 50% | 해당 컬럼 제거 | 신뢰할 수 없는 기술자 |
 
 ### GroupBy로 SAR 분석
 구조-활성 관계(SAR)를 Pandas로 빠르게 분석할 수 있습니다:

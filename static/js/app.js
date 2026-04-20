@@ -3,10 +3,94 @@
 // 진도는 localStorage에 저장
 
 const STORAGE_KEY = 'drugai_progress';
+const GIST_CONFIG_KEY = 'drugai_gist_config';
 let currentQuizAnswers = {};
 let currentQuizPhase = 1;
 let currentQuizWeek = 1;
 let _overviewCache = null;
+let _syncPending = false;
+
+// === GitHub Gist 동기화 ===
+function getGistConfig() {
+    const raw = localStorage.getItem(GIST_CONFIG_KEY);
+    return raw ? JSON.parse(raw) : null;
+}
+
+function saveGistConfig(config) {
+    localStorage.setItem(GIST_CONFIG_KEY, JSON.stringify(config));
+}
+
+async function gistApi(path, options = {}) {
+    const config = getGistConfig();
+    if (!config?.token) return null;
+    const res = await fetch(`https://api.github.com${path}`, {
+        headers: {
+            'Authorization': `token ${config.token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json',
+        },
+        ...options,
+    });
+    if (!res.ok) return null;
+    return res.json();
+}
+
+async function pullFromGist() {
+    const config = getGistConfig();
+    if (!config?.gist_id) return null;
+    const gist = await gistApi(`/gists/${config.gist_id}`);
+    if (!gist?.files?.['drugai_progress.json']?.content) return null;
+    try {
+        return JSON.parse(gist.files['drugai_progress.json'].content);
+    } catch { return null; }
+}
+
+async function pushToGist(data) {
+    const config = getGistConfig();
+    if (!config?.token) return;
+
+    const body = {
+        description: 'DrugAI Lab 학습 진도',
+        files: { 'drugai_progress.json': { content: JSON.stringify(data, null, 2) } },
+    };
+
+    if (config.gist_id) {
+        await gistApi(`/gists/${config.gist_id}`, { method: 'PATCH', body: JSON.stringify(body) });
+    } else {
+        body.public = false;
+        const gist = await gistApi('/gists', { method: 'POST', body: JSON.stringify(body) });
+        if (gist?.id) {
+            config.gist_id = gist.id;
+            saveGistConfig(config);
+        }
+    }
+}
+
+async function syncFromCloud() {
+    const remote = await pullFromGist();
+    if (!remote) return false;
+    const local = loadProgress();
+    if (!local) {
+        saveProgress(remote);
+        return true;
+    }
+    const remoteTime = remote.streak?.last_activity || '';
+    const localTime = local.streak?.last_activity || '';
+    if (remoteTime > localTime) {
+        saveProgress(remote);
+        return true;
+    }
+    return false;
+}
+
+function schedulePush(data) {
+    if (_syncPending) return;
+    _syncPending = true;
+    setTimeout(async () => {
+        _syncPending = false;
+        await pushToGist(data);
+    }, 2000);
+}
 
 // === localStorage 기반 진도 관리 ===
 async function loadProgressTemplate() {
@@ -21,6 +105,7 @@ function loadProgress() {
 
 function saveProgress(data) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    if (getGistConfig()?.token) schedulePush(data);
 }
 
 async function ensureProgress() {
@@ -575,8 +660,79 @@ function checkSyncFromUrl() {
     }
 }
 
+// === Gist 설정 UI ===
+async function setupGist() {
+    const token = document.getElementById('gist-token').value.trim();
+    if (!token || !token.startsWith('ghp_')) {
+        showToast('올바른 GitHub 토큰을 입력하세요 (ghp_로 시작)');
+        return;
+    }
+
+    const res = await fetch('https://api.github.com/user', {
+        headers: { 'Authorization': `token ${token}` },
+    });
+    if (!res.ok) {
+        showToast('토큰이 유효하지 않습니다.');
+        return;
+    }
+    const user = await res.json();
+
+    saveGistConfig({ token, gist_id: null, username: user.login });
+
+    const data = loadProgress();
+    if (data) await pushToGist(data);
+
+    showToast(`${user.login} 계정으로 연결되었습니다!`);
+    updateGistUI();
+}
+
+async function manualSync() {
+    showToast('동기화 중...');
+    const pulled = await syncFromCloud();
+    if (pulled) {
+        showToast('클라우드에서 최신 진도를 가져왔습니다!');
+        loadDashboard();
+    } else {
+        const data = loadProgress();
+        if (data) {
+            await pushToGist(data);
+            showToast('현재 진도를 클라우드에 저장했습니다!');
+        }
+    }
+}
+
+function disconnectGist() {
+    if (!confirm('클라우드 동기화 연결을 해제할까요? (로컬 진도는 유지됩니다)')) return;
+    localStorage.removeItem(GIST_CONFIG_KEY);
+    showToast('연결이 해제되었습니다.');
+    updateGistUI();
+}
+
+function updateGistUI() {
+    const config = getGistConfig();
+    const setup = document.getElementById('gist-setup');
+    const connected = document.getElementById('gist-connected');
+    const status = document.getElementById('gist-status');
+
+    if (!setup || !connected || !status) return;
+
+    if (config?.token) {
+        setup.style.display = 'none';
+        connected.style.display = 'block';
+        status.innerHTML = `<span style="color:var(--green);">&#9679;</span> ${config.username || 'GitHub'} 연결됨`;
+        status.style.cssText = 'font-size:0.85rem; margin-bottom:0.75rem; color:var(--green);';
+    } else {
+        setup.style.display = 'block';
+        connected.style.display = 'none';
+        status.innerHTML = '<span style="color:var(--text-muted);">&#9675;</span> 연결 안 됨';
+        status.style.cssText = 'font-size:0.85rem; margin-bottom:0.75rem; color:var(--text-muted);';
+    }
+}
+
 // === Init ===
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     checkSyncFromUrl();
+    if (getGistConfig()?.token) await syncFromCloud();
     loadDashboard();
+    updateGistUI();
 });

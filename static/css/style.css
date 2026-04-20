@@ -567,7 +567,13 @@ h3 { font-size: 1rem; margin-bottom: 0.75rem; color: var(--text); }
     flex-wrap: wrap;
 }
 
-.sync-textarea {
+.sync-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sync-textarea, input.sync-textarea {
     width: 100%;
     background: #0d0f16;
     color: var(--text);

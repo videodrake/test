@@ -114,10 +114,12 @@ scaffold_groups = defaultdict(list)
 for i, scaffold in enumerate(scaffolds):
     scaffold_groups[scaffold].append(i)
 
-# 골격 단위로 train/test 분배
+# 큰 scaffold부터 train에 배정 → 80/20에 가까워짐
+sorted_scaffolds = sorted(scaffold_groups.items(),
+                          key=lambda x: len(x[1]), reverse=True)
 train_idx, test_idx = [], []
-for scaffold, indices in scaffold_groups.items():
-    if len(train_idx) < len(X) * 0.8:
+for scaffold, indices in sorted_scaffolds:
+    if len(train_idx) / len(X) < 0.8:
         train_idx.extend(indices)
     else:
         test_idx.extend(indices)

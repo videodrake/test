@@ -95,9 +95,13 @@ class SimpleGCN(nn.Module):
     def forward(self, x, adj):
         h = self.gcn1(x, adj)
         h = self.gcn2(h, adj)
-        # 그래프 레벨 예측: 모든 노드의 평균
+        # 그래프 레벨 예측: 모든 노드의 평균 (단일 그래프용)
         graph_embedding = h.mean(dim=0)
         return self.readout(graph_embedding)
+
+# 주의: 이 구현은 한 번에 하나의 그래프만 처리합니다.
+# 여러 그래프를 배치로 처리하려면 PyG의 Batch + global_mean_pool()이 필요합니다.
+# → Day 2에서 PyG로 배치 처리를 배웁니다.
 ```
 
 ### 인접 행렬 정규화

@@ -37,7 +37,16 @@ def encode_smiles(smiles, max_len=100):
     return padded
 ```
 
-### 1D CNN 모델
+### 두 가지 인코딩 방식
+
+| 방식 | 입력 shape | 장점 | 단점 |
+|------|-----------|------|------|
+| **정수 + Embedding** | (batch, seq_len) → 학습 가능 벡터 | 파라미터 적음, 의미 학습 | Embedding 레이어 필요 |
+| **원-핫 인코딩** | (batch, vocab_size, seq_len) | 구현 간단, Embedding 불필요 | 희소, 메모리 비효율 |
+
+아래 모델은 **Embedding** 방식을 사용합니다 (실습에서는 원-핫도 시도합니다):
+
+### 1D CNN 모델 (Embedding 방식)
 
 ```python
 class SMILESCNN(nn.Module):

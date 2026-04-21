@@ -74,6 +74,17 @@ for name, imp in sorted(zip(feature_names, importances), key=lambda x: -x[1]):
     print(f"  {name}: {imp:.3f}")
 ```
 
+### 데이터 전처리: 스케일링 (미리보기)
+로지스틱 회귀는 기술자의 **스케일에 민감**합니다. MW(수백)와 HBD(0~5)의 범위가 다르면 큰 값이 지배합니다. `StandardScaler`로 모든 기술자를 평균=0, 표준편차=1로 맞춰야 합니다. (Day 4에서 더 자세히 다룹니다.)
+
+```python
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)  # train에서 fit
+X_test_scaled = scaler.transform(X_test)         # test는 transform만!
+```
+
 ### 세 모델 비교
 
 | 모델 | 장점 | 단점 | 신약개발 활용 |

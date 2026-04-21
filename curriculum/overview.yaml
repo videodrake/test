@@ -212,112 +212,112 @@ phases:
             exercises: []
 
   - number: 3
-    title: "최신 기술과 트렌드"
-    description: "LLM, Foundation Model, AI 에이전트 등 최신 기술이 신약개발을 어떻게 변화시키고 있는지 파악한다"
+    title: "확장 기술과 최신 트렌드"
+    description: "바이오의약품, 합성 예측, LLM, AI 에이전트 등 확장 영역과 최신 기술을 파악한다"
     weeks:
       - number: 1
-        title: "LLM과 신약개발"
-        quiz_path: "phase3_trends/week1_llm/quiz/week1_quiz.yaml"
+        title: "가상 스크리닝과 합성 가능성"
+        quiz_path: "phase3_advanced/week1_screening/quiz/week1_quiz.yaml"
         days:
           - number: 1
-            title: "LLM 기초 — GPT, Claude, Gemini의 작동 원리"
-            content_path: "phase3_trends/week1_llm/day01.md"
+            title: "가상 스크리닝 심화 — 리간드 기반 vs 구조 기반"
+            content_path: "phase3_advanced/week1_screening/day01.md"
             exercises: []
           - number: 2
-            title: "화학 LLM — 분자를 이해하는 언어 모델"
-            content_path: "phase3_trends/week1_llm/day02.md"
+            title: "대규모 라이브러리 스크리닝 — 수십억 화합물을 다루는 법"
+            content_path: "phase3_advanced/week1_screening/day02.md"
             exercises: []
           - number: 3
-            title: "LLM으로 논문 분석과 가설 생성"
-            content_path: "phase3_trends/week1_llm/day03.md"
+            title: "합성 가능성 예측 — AI가 만든 분자를 실제로 합성할 수 있는가"
+            content_path: "phase3_advanced/week1_screening/day03.md"
             exercises: []
           - number: 4
-            title: "RAG와 화학 문헌 검색 — 지식 기반 AI"
-            content_path: "phase3_trends/week1_llm/day04.md"
+            title: "역합성 분석 — AI가 합성 경로를 설계한다"
+            content_path: "phase3_advanced/week1_screening/day04.md"
             exercises: []
           - number: 5
-            title: "Week 1 종합 — LLM 활용 전략과 한계"
-            content_path: "phase3_trends/week1_llm/day05.md"
+            title: "Week 1 종합 — 가상 스크리닝에서 실험 검증까지"
+            content_path: "phase3_advanced/week1_screening/day05.md"
             exercises: []
 
       - number: 2
-        title: "Foundation Model과 멀티모달"
-        quiz_path: "phase3_trends/week2_foundation/quiz/week2_quiz.yaml"
+        title: "바이오의약품과 AI"
+        quiz_path: "phase3_advanced/week2_biologics/quiz/week2_quiz.yaml"
         days:
           - number: 1
-            title: "화학 Foundation Model — MolFormer, Uni-Mol"
-            content_path: "phase3_trends/week2_foundation/day01.md"
+            title: "바이오의약품 개요 — 항체, 펩타이드, ADC의 시대"
+            content_path: "phase3_advanced/week2_biologics/day01.md"
             exercises: []
           - number: 2
-            title: "멀티모달 AI — 텍스트+분자+단백질 통합"
-            content_path: "phase3_trends/week2_foundation/day02.md"
+            title: "항체 설계 AI — 서열 최적화와 구조 예측"
+            content_path: "phase3_advanced/week2_biologics/day02.md"
             exercises: []
           - number: 3
-            title: "자기지도 학습과 사전학습 전략"
-            content_path: "phase3_trends/week2_foundation/day03.md"
+            title: "RNA 치료제와 AI — mRNA, siRNA, ASO 설계"
+            content_path: "phase3_advanced/week2_biologics/day03.md"
             exercises: []
           - number: 4
-            title: "파인튜닝과 Few-shot Learning — 적은 데이터의 마법"
-            content_path: "phase3_trends/week2_foundation/day04.md"
+            title: "세포/유전자 치료와 AI — CAR-T, 유전자 편집 최적화"
+            content_path: "phase3_advanced/week2_biologics/day04.md"
             exercises: []
           - number: 5
-            title: "Week 2 종합 — Foundation Model 시대의 전략"
-            content_path: "phase3_trends/week2_foundation/day05.md"
+            title: "Week 2 종합 — 바이오의약품 AI 시장과 기회"
+            content_path: "phase3_advanced/week2_biologics/day05.md"
             exercises: []
 
       - number: 3
-        title: "AI 에이전트와 자동화"
-        quiz_path: "phase3_trends/week3_agents/quiz/week3_quiz.yaml"
+        title: "LLM, Foundation Model, AI 에이전트"
+        quiz_path: "phase3_advanced/week3_llm_agents/quiz/week3_quiz.yaml"
         days:
           - number: 1
-            title: "AI 에이전트란 — 도구를 사용하는 AI"
-            content_path: "phase3_trends/week3_agents/day01.md"
+            title: "LLM 기초 — GPT, Claude의 작동 원리와 신약개발 활용"
+            content_path: "phase3_advanced/week3_llm_agents/day01.md"
             exercises: []
           - number: 2
-            title: "화학 AI 에이전트 — 실험 설계부터 분석까지"
-            content_path: "phase3_trends/week3_agents/day02.md"
+            title: "화학 Foundation Model — MolFormer, Uni-Mol, 사전학습 전략"
+            content_path: "phase3_advanced/week3_llm_agents/day02.md"
             exercises: []
           - number: 3
-            title: "자동화 실험실(Self-Driving Lab)과 로봇 화학"
-            content_path: "phase3_trends/week3_agents/day03.md"
+            title: "AI 에이전트 — 도구를 사용하는 AI, MCP, 자동화 실험"
+            content_path: "phase3_advanced/week3_llm_agents/day03.md"
             exercises: []
           - number: 4
-            title: "MCP와 도구 통합 — AI가 RDKit을 직접 사용한다"
-            content_path: "phase3_trends/week3_agents/day04.md"
+            title: "RAG와 멀티모달 — 텍스트+분자+단백질 통합 AI"
+            content_path: "phase3_advanced/week3_llm_agents/day04.md"
             exercises: []
           - number: 5
-            title: "Week 3 종합 — 에이전트 기반 신약개발의 미래"
-            content_path: "phase3_trends/week3_agents/day05.md"
+            title: "Week 3 종합 — 차세대 AI 기술의 창업 기회"
+            content_path: "phase3_advanced/week3_llm_agents/day05.md"
             exercises: []
 
       - number: 4
-        title: "최신 논문과 기술 동향"
-        quiz_path: "phase3_trends/week4_cutting_edge/quiz/week4_quiz.yaml"
+        title: "MD 시뮬레이션과 임상 AI"
+        quiz_path: "phase3_advanced/week4_md_clinical/quiz/week4_quiz.yaml"
         days:
           - number: 1
-            title: "2024-2025 주요 브레이크스루 총정리"
-            content_path: "phase3_trends/week4_cutting_edge/day01.md"
+            title: "분자 동역학(MD) 시뮬레이션 — 원리와 AI 가속"
+            content_path: "phase3_advanced/week4_md_clinical/day01.md"
             exercises: []
           - number: 2
-            title: "항체/펩타이드 설계 AI — 바이오의약품의 미래"
-            content_path: "phase3_trends/week4_cutting_edge/day02.md"
+            title: "자유에너지 계산과 결합 친화력 예측"
+            content_path: "phase3_advanced/week4_md_clinical/day02.md"
             exercises: []
           - number: 3
-            title: "RNA 치료제와 AI — mRNA, siRNA, ASO"
-            content_path: "phase3_trends/week4_cutting_edge/day03.md"
+            title: "AI 임상시험 최적화 — 환자 선별, 용량 결정, 바이오마커"
+            content_path: "phase3_advanced/week4_md_clinical/day03.md"
             exercises: []
           - number: 4
-            title: "디지털 트윈과 가상 임상시험"
-            content_path: "phase3_trends/week4_cutting_edge/day04.md"
+            title: "실험적 검증 — AI 예측을 wet lab에서 확인하는 전략"
+            content_path: "phase3_advanced/week4_md_clinical/day04.md"
             exercises: []
           - number: 5
-            title: "Phase 3 종합 — 기술 트렌드 맵과 투자 포인트"
-            content_path: "phase3_trends/week4_cutting_edge/day05.md"
+            title: "Phase 3 종합 — 기술 포트폴리오와 차별화 전략"
+            content_path: "phase3_advanced/week4_md_clinical/day05.md"
             exercises: []
 
   - number: 4
-    title: "실무 도구와 실행"
-    description: "바이브코딩으로 실제 AI 도구를 구축하고, 데이터 파이프라인과 배포까지 실행한다"
+    title: "실무 도구와 프로덕트"
+    description: "바이브코딩으로 AI 도구를 구축하고, 데이터 인프라와 배포까지 실행한다"
     weeks:
       - number: 1
         title: "바이브코딩으로 AI 도구 구축"
@@ -345,83 +345,83 @@ phases:
             exercises: []
 
       - number: 2
-        title: "데이터 파이프라인과 인프라"
-        quiz_path: "phase4_tools/week2_data_infra/quiz/week2_quiz.yaml"
+        title: "데이터 인프라와 오픈소스 도구"
+        quiz_path: "phase4_tools/week2_infra/quiz/week2_quiz.yaml"
         days:
           - number: 1
-            title: "데이터 파이프라인 설계 — 수집에서 학습까지"
-            content_path: "phase4_tools/week2_data_infra/day01.md"
+            title: "데이터 파이프라인 — ChEMBL, PDB에서 모델 학습까지"
+            content_path: "phase4_tools/week2_infra/day01.md"
             exercises: []
           - number: 2
-            title: "ChEMBL/PDB API 활용과 데이터 통합"
-            content_path: "phase4_tools/week2_data_infra/day02.md"
+            title: "오픈소스 생태계 — RDKit, PyG, HuggingFace, Ollama"
+            content_path: "phase4_tools/week2_infra/day02.md"
             exercises: []
           - number: 3
-            title: "실험 추적과 모델 관리 — MLflow, W&B"
-            content_path: "phase4_tools/week2_data_infra/day03.md"
+            title: "MLOps — 실험 추적, 모델 관리, 재현성"
+            content_path: "phase4_tools/week2_infra/day03.md"
             exercises: []
           - number: 4
-            title: "클라우드와 GPU — AWS, GCP에서 모델 학습"
-            content_path: "phase4_tools/week2_data_infra/day04.md"
+            title: "배포 — Docker, FastAPI, 클라우드 GPU"
+            content_path: "phase4_tools/week2_infra/day04.md"
             exercises: []
           - number: 5
-            title: "Week 2 종합 — 스타트업 인프라 아키텍처"
-            content_path: "phase4_tools/week2_data_infra/day05.md"
+            title: "Week 2 종합 — 스타트업 기술 스택 결정"
+            content_path: "phase4_tools/week2_infra/day05.md"
             exercises: []
 
       - number: 3
-        title: "오픈소스 생태계와 배포"
-        quiz_path: "phase4_tools/week3_opensource/quiz/week3_quiz.yaml"
-        days:
-          - number: 1
-            title: "RDKit, PyG, HuggingFace — 핵심 도구 생태계"
-            content_path: "phase4_tools/week3_opensource/day01.md"
-            exercises: []
-          - number: 2
-            title: "사전학습 모델 활용 — HuggingFace에서 가져다 쓰기"
-            content_path: "phase4_tools/week3_opensource/day02.md"
-            exercises: []
-          - number: 3
-            title: "로컬 LLM 활용 — Ollama, Gemma로 화학 에이전트"
-            content_path: "phase4_tools/week3_opensource/day03.md"
-            exercises: []
-          - number: 4
-            title: "배포와 서비스화 — Docker, FastAPI, Streamlit"
-            content_path: "phase4_tools/week3_opensource/day04.md"
-            exercises: []
-          - number: 5
-            title: "Week 3 종합 — 기술 스택 선택과 아키텍처 결정"
-            content_path: "phase4_tools/week3_opensource/day05.md"
-            exercises: []
-
-      - number: 4
-        title: "프로덕트 구축 실전"
-        quiz_path: "phase4_tools/week4_product/quiz/week4_quiz.yaml"
+        title: "프로덕트 설계와 품질"
+        quiz_path: "phase4_tools/week3_product/quiz/week3_quiz.yaml"
         days:
           - number: 1
             title: "AI 신약개발 제품의 유형과 설계 패턴"
-            content_path: "phase4_tools/week4_product/day01.md"
+            content_path: "phase4_tools/week3_product/day01.md"
             exercises: []
           - number: 2
             title: "UX/UI 설계 — 과학자를 위한 인터페이스"
-            content_path: "phase4_tools/week4_product/day02.md"
+            content_path: "phase4_tools/week3_product/day02.md"
             exercises: []
           - number: 3
             title: "보안, 데이터 프라이버시, 규제 준수"
-            content_path: "phase4_tools/week4_product/day03.md"
+            content_path: "phase4_tools/week3_product/day03.md"
             exercises: []
           - number: 4
-            title: "테스팅과 품질 보증 — 과학 소프트웨어의 특수성"
-            content_path: "phase4_tools/week4_product/day04.md"
+            title: "테스팅과 품질 보증 — 과학 소프트웨어의 검증"
+            content_path: "phase4_tools/week3_product/day04.md"
             exercises: []
           - number: 5
             title: "Phase 4 종합 — 나만의 AI 도구 로드맵"
-            content_path: "phase4_tools/week4_product/day05.md"
+            content_path: "phase4_tools/week3_product/day05.md"
+            exercises: []
+
+      - number: 4
+        title: "규제와 약학적 판단"
+        quiz_path: "phase4_tools/week4_regulatory/quiz/week4_quiz.yaml"
+        days:
+          - number: 1
+            title: "AI 신약개발의 규제 현황 — FDA, EMA, MFDS 가이드라인"
+            content_path: "phase4_tools/week4_regulatory/day01.md"
+            exercises: []
+          - number: 2
+            title: "AI 모델의 규제 제출 — 검증, 문서화, 투명성"
+            content_path: "phase4_tools/week4_regulatory/day02.md"
+            exercises: []
+          - number: 3
+            title: "약학적 판단의 AI 통합 — PK/PD 모델링과 AI"
+            content_path: "phase4_tools/week4_regulatory/day03.md"
+            exercises: []
+          - number: 4
+            title: "IP 전략 — AI 생성 분자의 특허, 영업비밀, 데이터 권리"
+            content_path: "phase4_tools/week4_regulatory/day04.md"
+            exercises: []
+          - number: 5
+            title: "Week 4 종합 — 약사-창업자의 규제 경쟁력"
+            content_path: "phase4_tools/week4_regulatory/day05.md"
             exercises: []
 
   - number: 5
     title: "창업과 비즈니스"
-    description: "AI 신약개발 스타트업의 시장, 비즈니스 모델, 투자, 팀, 규제를 다루고 실행 계획을 수립한다"
+    description: "AI 신약개발 스타트업의 시장, 비즈니스 모델, 투자, 팀을 설계하고 실행 계획을 수립한다"
     weeks:
       - number: 1
         title: "시장 분석과 포지셔닝"
@@ -432,7 +432,7 @@ phases:
             content_path: "phase5_business/week1_market/day01.md"
             exercises: []
           - number: 2
-            title: "경쟁사 분석 — Insilico, Recursion, Schrödinger"
+            title: "글로벌 경쟁사 분석 — Insilico, Recursion, Schrödinger"
             content_path: "phase5_business/week1_market/day02.md"
             exercises: []
           - number: 3
@@ -440,7 +440,7 @@ phases:
             content_path: "phase5_business/week1_market/day03.md"
             exercises: []
           - number: 4
-            title: "포지셔닝 전략 — 어디서 시작할 것인가"
+            title: "포지셔닝 전략 — 약학 전공자로서 어디서 시작할 것인가"
             content_path: "phase5_business/week1_market/day04.md"
             exercises: []
           - number: 5
@@ -453,19 +453,19 @@ phases:
         quiz_path: "phase5_business/week2_bizmodel/quiz/week2_quiz.yaml"
         days:
           - number: 1
-            title: "AI 신약개발 비즈니스 모델 유형 — SaaS, 플랫폼, 파이프라인"
+            title: "AI 신약개발 비즈니스 모델 — SaaS, 플랫폼, 파이프라인"
             content_path: "phase5_business/week2_bizmodel/day01.md"
             exercises: []
           - number: 2
-            title: "가격 전략과 수익 모델"
+            title: "가격 전략과 수익 모델 — 제약사에 어떻게 팔 것인가"
             content_path: "phase5_business/week2_bizmodel/day02.md"
             exercises: []
           - number: 3
-            title: "파트너십과 빅파마 협업 전략"
+            title: "파트너십과 빅파마 협업 — 계약 구조와 협상"
             content_path: "phase5_business/week2_bizmodel/day03.md"
             exercises: []
           - number: 4
-            title: "IP 전략과 규제 — FDA, MFDS, 특허"
+            title: "성공/실패 사례 분석 — 무엇이 갈랐는가"
             content_path: "phase5_business/week2_bizmodel/day04.md"
             exercises: []
           - number: 5
@@ -474,7 +474,7 @@ phases:
             exercises: []
 
       - number: 3
-        title: "실행과 팀 구성"
+        title: "실행 — 팀, 투자, 런칭"
         quiz_path: "phase5_business/week3_execution/quiz/week3_quiz.yaml"
         days:
           - number: 1
@@ -482,7 +482,7 @@ phases:
             content_path: "phase5_business/week3_execution/day01.md"
             exercises: []
           - number: 2
-            title: "팀 구성 — 누구와 시작할 것인가"
+            title: "팀 구성 — 약사+개발자+과학자 조합"
             content_path: "phase5_business/week3_execution/day02.md"
             exercises: []
           - number: 3
@@ -499,7 +499,7 @@ phases:
             exercises: []
 
       - number: 4
-        title: "종합 프로젝트"
+        title: "캡스톤 프로젝트"
         quiz_path: "phase5_business/week4_capstone/quiz/week4_quiz.yaml"
         days:
           - number: 1
@@ -507,18 +507,18 @@ phases:
             content_path: "phase5_business/week4_capstone/day01.md"
             exercises: []
           - number: 2
-            title: "기술 아키텍처 설계 — AI 파이프라인 구성"
+            title: "기술 아키텍처 설계 — AI 파이프라인 완성"
             content_path: "phase5_business/week4_capstone/day02.md"
             exercises: []
           - number: 3
-            title: "사업계획서 작성 — 핵심 요소와 구조"
+            title: "사업계획서 작성"
             content_path: "phase5_business/week4_capstone/day03.md"
             exercises: []
           - number: 4
-            title: "투자자 피칭 덱 완성"
+            title: "투자자 피칭 덱 완성과 모의 발표"
             content_path: "phase5_business/week4_capstone/day04.md"
             exercises: []
           - number: 5
-            title: "프로그램 완료 — 다음 단계와 지속 학습 전략"
+            title: "프로그램 완료 — 100일의 결산과 다음 단계"
             content_path: "phase5_business/week4_capstone/day05.md"
             exercises: []

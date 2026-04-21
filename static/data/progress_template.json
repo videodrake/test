@@ -1,0 +1,53 @@
+{
+  "user": {
+    "start_date": null,
+    "current_phase": 1,
+    "current_week": 1,
+    "current_day": 1
+  },
+  "streak": {
+    "current": 0,
+    "longest": 0,
+    "last_activity": null
+  },
+  "phases": {
+    "1": {
+      "status": "in_progress",
+      "weeks": {
+        "1": {
+          "days": {
+            "1": {
+              "theory": "not_started",
+              "exercises": "not_started",
+              "quiz": "not_started",
+              "completed_at": null
+            }
+          }
+        }
+      }
+    }
+  },
+  "quiz_history": [],
+  "milestones": {
+    "1": {
+      "status": "not_started",
+      "submitted_at": null
+    },
+    "2": {
+      "status": "not_started",
+      "submitted_at": null
+    },
+    "3": {
+      "status": "not_started",
+      "submitted_at": null
+    },
+    "4": {
+      "status": "not_started",
+      "submitted_at": null
+    },
+    "5": {
+      "status": "not_started",
+      "submitted_at": null
+    }
+  }
+}

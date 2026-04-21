@@ -1,0 +1,113 @@
+title: "Week 4: GNN, 어텐션, 전이학습 퀴즈"
+description: "그래프 신경망(GNN), PyTorch Geometric, 메시지 패싱, 어텐션 메커니즘, 전이학습을 점검합니다"
+
+questions:
+  - id: "w4q1"
+    question: "분자를 그래프로 표현할 때 노드(node)와 엣지(edge)가 각각 의미하는 것은?"
+    type: "multiple_choice"
+    options:
+      - "노드=분자, 엣지=분자 간 유사도"
+      - "노드=원자, 엣지=화학 결합"
+      - "노드=작용기, 엣지=반응 경로"
+      - "노드=SMILES 문자, 엣지=문자 순서"
+    answer: "1"
+    explanation: "분자 그래프에서 각 원자는 노드, 화학 결합은 엣지로 표현됩니다. 노드 특성에는 원자 번호, 원자가 전자 수, 방향족 여부 등이, 엣지 특성에는 결합 차수(단일/이중/삼중), 결합 유형(방향족 여부) 등이 포함됩니다. 이 표현은 분자의 위상 구조를 정확히 반영합니다."
+
+  - id: "w4q2"
+    question: "GNN의 메시지 패싱(message passing) 한 라운드에서 일어나는 과정은?"
+    type: "multiple_choice"
+    options:
+      - "모든 노드의 특성을 평균으로 대체한다"
+      - "각 노드가 이웃 노드들의 정보를 수집(aggregate)하고, 자신의 특성을 업데이트한다"
+      - "그래프의 엣지를 무작위로 제거한다"
+      - "노드 특성을 PCA로 차원 축소한다"
+    answer: "1"
+    explanation: "메시지 패싱에서 각 노드는 (1) 이웃 노드로부터 메시지(특성)를 수집하고, (2) 수집된 정보를 집계(sum, mean, max 등)한 후, (3) 자신의 현재 특성과 결합하여 업데이트합니다. K번의 메시지 패싱 후 각 노드는 K-hop 이웃의 정보를 포함하게 됩니다."
+
+  - id: "w4q3"
+    question: "GCN(Graph Convolutional Network)에서 인접 행렬 A에 자기 루프(self-loop)를 추가하는 이유는?"
+    type: "multiple_choice"
+    options:
+      - "그래프의 연결성을 높이기 위해"
+      - "집계 시 자기 자신의 특성도 포함시켜 이전 정보를 보존하기 위해"
+      - "계산 속도를 높이기 위해"
+      - "역전파에서 기울기 소실을 방지하기 위해"
+    answer: "1"
+    explanation: "자기 루프(A + I)를 추가하면 노드가 이웃의 정보뿐 아니라 자신의 기존 특성도 집계에 포함시킵니다. 이를 통해 메시지 패싱 과정에서 자신의 화학적 정체성(예: 탄소, 질소)이 유지됩니다. 자기 루프가 없으면 여러 층을 거치면서 원래 원자 정보가 손실될 수 있습니다."
+
+  - id: "w4q4"
+    question: "PyTorch Geometric의 Data 객체에서 edge_index의 shape이 [2, num_edges]인 이유는?"
+    type: "multiple_choice"
+    options:
+      - "무방향 그래프이므로 2개의 방향을 저장하기 위해"
+      - "첫 번째 행은 소스 노드, 두 번째 행은 타겟 노드 인덱스를 저장하는 COO 형식이기 때문"
+      - "노드 특성과 엣지 특성을 함께 저장하기 위해"
+      - "배치 처리를 위한 패딩을 포함하기 때문"
+    answer: "1"
+    explanation: "edge_index는 COO(Coordinate) 형식으로, edge_index[0]은 소스 노드 인덱스, edge_index[1]은 타겟 노드 인덱스를 저장합니다. 무방향 그래프의 경우 양방향 엣지를 모두 포함합니다(A-B 결합이면 [A,B]와 [B,A] 모두). 이 형식은 희소 행렬 연산에 효율적입니다."
+
+  - id: "w4q5"
+    question: "GAT(Graph Attention Network)가 GCN보다 유리한 점은?"
+    type: "multiple_choice"
+    options:
+      - "GAT는 항상 GCN보다 빠르게 학습된다"
+      - "GAT는 이웃 노드마다 다른 가중치(attention score)를 학습하여 중요한 이웃에 더 집중할 수 있다"
+      - "GAT는 메시지 패싱이 필요 없다"
+      - "GAT는 GCN보다 파라미터 수가 항상 적다"
+    answer: "1"
+    explanation: "GCN은 모든 이웃에 동일한 가중치(degree normalization)를 적용하지만, GAT는 어텐션 메커니즘으로 각 이웃의 중요도를 학습합니다. 분자에서 특정 원자(예: 약물-타겟 상호작용에 핵심적인 작용기의 원자)에 더 높은 어텐션을 부여할 수 있어 해석 가능성도 향상됩니다."
+
+  - id: "w4q6"
+    question: "그래프 분류(graph classification)에서 readout(또는 global pooling)의 역할은?"
+    type: "multiple_choice"
+    options:
+      - "그래프의 엣지를 제거하여 노드만 남기는 것"
+      - "모든 노드 임베딩을 집계하여 고정 크기의 그래프 수준 벡터를 생성하는 것"
+      - "그래프를 여러 하위 그래프로 분할하는 것"
+      - "노드 레이블을 예측하는 것"
+    answer: "1"
+    explanation: "분자 속성 예측은 그래프 수준의 예측이므로, 개별 노드(원자) 임베딩을 하나의 분자 벡터로 집계해야 합니다. global_mean_pool, global_add_pool 등으로 모든 노드 특성을 평균/합산합니다. 이 벡터가 최종 MLP에 입력되어 pIC50 등을 예측합니다."
+
+  - id: "w4q7"
+    question: "Self-attention에서 Query, Key, Value의 역할로 올바른 설명은?"
+    type: "multiple_choice"
+    options:
+      - "Query는 입력, Key는 출력, Value는 가중치이다"
+      - "Query는 '무엇을 찾을지', Key는 '어떤 정보가 있는지', Value는 '실제 전달할 정보'를 나타낸다"
+      - "Query, Key, Value는 모두 동일한 값이다"
+      - "Query는 인코더, Key는 디코더, Value는 손실 함수에 사용된다"
+    answer: "1"
+    explanation: "Self-attention에서 Query(Q)는 현재 위치에서 찾고자 하는 정보 패턴, Key(K)는 각 위치가 가진 정보의 식별자, Value(V)는 실제로 전달할 정보입니다. Q와 K의 내적으로 어텐션 점수를 계산하고, 이를 softmax 정규화하여 V의 가중 합으로 출력을 만듭니다."
+
+  - id: "w4q8"
+    question: "전이학습(Transfer Learning)에서 사전학습된 모델을 파인튜닝할 때 일반적인 전략은?"
+    type: "multiple_choice"
+    options:
+      - "모든 레이어의 가중치를 무작위로 다시 초기화한 후 학습한다"
+      - "사전학습된 가중치를 로드하고, 마지막 분류/회귀 레이어만 교체한 후 작은 학습률로 전체 또는 일부를 학습한다"
+      - "사전학습된 모델의 출력을 별도의 모델에 입력으로 연결한다"
+      - "사전학습된 데이터와 새 데이터를 합쳐서 처음부터 다시 학습한다"
+    answer: "1"
+    explanation: "전이학습은 대규모 데이터로 사전학습된 모델의 지식을 소규모 타겟 데이터셋에 전이합니다. 신약개발에서는 대규모 ChEMBL 데이터로 일반적 분자 표현을 학습한 후, 소규모 타겟별 활성 데이터로 파인튜닝하여 적은 데이터로도 높은 예측 성능을 달성합니다."
+
+  - id: "w4q9"
+    question: "PyTorch Geometric에서 여러 분자 그래프를 하나의 배치로 처리하는 방식은?"
+    type: "multiple_choice"
+    options:
+      - "모든 그래프를 같은 크기로 패딩(padding)한다"
+      - "여러 그래프를 하나의 큰 비연결 그래프(disjoint graph)로 합치고, batch 텐서로 각 노드의 소속 그래프를 추적한다"
+      - "각 그래프를 순차적으로 처리한다"
+      - "가장 큰 그래프의 크기에 맞춰 노드를 복제한다"
+    answer: "1"
+    explanation: "PyG는 여러 그래프를 하나의 큰 비연결 그래프로 합칩니다. batch 텐서가 각 노드가 어떤 그래프에 속하는지 기록합니다. 이를 통해 패딩 없이 효율적인 배치 처리가 가능합니다. global_mean_pool(x, batch)처럼 batch 정보를 활용하여 그래프별 집계를 수행합니다."
+
+  - id: "w4q10"
+    question: "Frozen backbone + fine-tuned head 전략에서 backbone을 동결(freeze)하는 이유는?"
+    type: "multiple_choice"
+    options:
+      - "학습 데이터가 충분히 많아서 backbone 업데이트가 불필요하기 때문"
+      - "소규모 데이터에서 전체 모델을 학습하면 과적합 위험이 높으므로, 사전학습된 특성 추출기를 보존하기 위해"
+      - "backbone의 가중치가 최적이어서 더 이상 개선할 수 없기 때문"
+      - "GPU 메모리 부족 문제를 해결하기 위해"
+    answer: "1"
+    explanation: "소규모 타겟 데이터셋(예: 특정 키나아제 억제제 100개)으로 전체 모델을 학습하면 과적합됩니다. Backbone(특성 추출부)을 동결하면 대규모 데이터에서 학습된 일반적 분자 표현을 보존하고, 새로운 head(예측부)만 학습하여 파라미터 수를 줄이고 과적합을 방지합니다. 데이터가 충분하면 backbone도 작은 학습률로 함께 파인튜닝할 수 있습니다."

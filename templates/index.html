@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 신약개발 학습 프로그램</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0f1117">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>DrugAI Lab</h2>
+            <p class="subtitle">신약개발 학습</p>
+        </div>
+        <ul class="nav-menu">
+            <li><button class="nav-btn active" data-view="dashboard" onclick="showView('dashboard')">
+                <span class="icon">&#9881;</span> 대시보드
+            </button></li>
+            <li><button class="nav-btn" data-view="today" onclick="showView('today')">
+                <span class="icon">&#9776;</span> 오늘의 학습
+            </button></li>
+            <li><button class="nav-btn" data-view="curriculum" onclick="showView('curriculum')">
+                <span class="icon">&#9733;</span> 커리큘럼
+            </button></li>
+            <li><button class="nav-btn" data-view="quiz" onclick="showView('quiz')">
+                <span class="icon">&#10004;</span> 퀴즈
+            </button></li>
+            <li><button class="nav-btn" data-view="progress" onclick="showView('progress')">
+                <span class="icon">&#9650;</span> 진도 현황
+            </button></li>
+        </ul>
+        <div class="streak-box">
+            <div class="streak-number" id="sidebar-streak">0</div>
+            <div class="streak-label">일 연속</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content">
+        <!-- Dashboard View -->
+        <section id="view-dashboard" class="view active">
+            <h1>AI 신약개발 학습 대시보드</h1>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-phase">-</div>
+                    <div class="stat-label">현재 Phase</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-week">-</div>
+                    <div class="stat-label">현재 Week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-day">-</div>
+                    <div class="stat-label">현재 Day</div>
+                </div>
+                <div class="stat-card accent">
+                    <div class="stat-value" id="stat-streak">0</div>
+                    <div class="stat-label">연속 학습일</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>오늘의 진행 상황</h3>
+                    <div class="task-list" id="dashboard-tasks">
+                        <div class="task-item" id="dash-theory">
+                            <span class="task-status">&#9711;</span>
+                            <span class="task-name">이론 학습</span>
+                        </div>
+                        <div class="task-item" id="dash-exercises">
+                            <span class="task-status">&#9711;</span>
+                            <span class="task-name">코딩 실습</span>
+                        </div>
+                        <div class="task-item" id="dash-quiz">
+                            <span class="task-status">&#9711;</span>
+                            <span class="task-name">퀴즈</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>전체 진도</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="dashboard-progress" style="width: 0%"></div>
+                    </div>
+                    <p class="progress-text" id="dashboard-progress-text">0 / 100일 완료</p>
+
+                    <h3 style="margin-top:1.5rem;">퀴즈 성적</h3>
+                    <div class="stat-inline">
+                        <span>평균 점수:</span>
+                        <span id="stat-quiz-avg">-</span>
+                    </div>
+                    <div class="stat-inline">
+                        <span>총 퀴즈:</span>
+                        <span id="stat-quiz-total">0회</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>커리큘럼 로드맵</h3>
+                <div class="roadmap">
+                    <div class="roadmap-phase" id="roadmap-1">
+                        <div class="roadmap-dot"></div>
+                        <div class="roadmap-info">
+                            <strong>Phase 1</strong>
+                            <span>ML/DL 기초</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-phase" id="roadmap-2">
+                        <div class="roadmap-dot"></div>
+                        <div class="roadmap-info">
+                            <strong>Phase 2</strong>
+                            <span>화학정보학</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-phase" id="roadmap-3">
+                        <div class="roadmap-dot"></div>
+                        <div class="roadmap-info">
+                            <strong>Phase 3</strong>
+                            <span>AI 신약개발</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-phase" id="roadmap-4">
+                        <div class="roadmap-dot"></div>
+                        <div class="roadmap-info">
+                            <strong>Phase 4</strong>
+                            <span>고급 주제</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-phase" id="roadmap-5">
+                        <div class="roadmap-dot"></div>
+                        <div class="roadmap-info">
+                            <strong>Phase 5</strong>
+                            <span>파이프라인</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Today's Learning View -->
+        <section id="view-today" class="view">
+            <div class="view-header">
+                <h1 id="today-title">오늘의 학습</h1>
+                <div class="view-actions">
+                    <button class="btn btn-outline" onclick="loadToday()">새로고침</button>
+                </div>
+            </div>
+            <div class="today-meta" id="today-meta"></div>
+
+            <div class="today-tasks">
+                <div class="task-card" id="task-theory">
+                    <div class="task-header">
+                        <h3>이론 학습</h3>
+                        <button class="btn btn-sm btn-complete" onclick="completeTask('theory')" id="btn-theory">완료</button>
+                    </div>
+                    <div class="task-body" id="theory-content">
+                        <p>로딩 중...</p>
+                    </div>
+                </div>
+
+                <div class="task-card" id="task-exercises">
+                    <div class="task-header">
+                        <h3>코딩 실습</h3>
+                        <button class="btn btn-sm btn-complete" onclick="completeTask('exercises')" id="btn-exercises">완료</button>
+                    </div>
+                    <div class="task-body" id="exercises-content">
+                        <p>로딩 중...</p>
+                    </div>
+                </div>
+
+                <div class="task-card" id="task-quiz">
+                    <div class="task-header">
+                        <h3>퀴즈</h3>
+                        <button class="btn btn-sm" onclick="showView('quiz')">퀴즈 풀기</button>
+                    </div>
+                    <div class="task-body">
+                        <p>오늘의 학습 내용을 퀴즈로 확인하세요.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-nav">
+                <button class="btn btn-primary btn-lg" onclick="advanceDay()" id="btn-advance" disabled>
+                    다음 학습으로 넘어가기 &rarr;
+                </button>
+            </div>
+        </section>
+
+        <!-- Curriculum View -->
+        <section id="view-curriculum" class="view">
+            <h1>커리큘럼</h1>
+            <div id="curriculum-tree" class="curriculum-tree"></div>
+        </section>
+
+        <!-- Quiz View -->
+        <section id="view-quiz" class="view">
+            <div class="view-header">
+                <h1>퀴즈</h1>
+                <div class="quiz-info" id="quiz-info"></div>
+            </div>
+            <div id="quiz-container" class="quiz-container">
+                <p>퀴즈를 불러오는 중...</p>
+            </div>
+            <div id="quiz-results" class="quiz-results" style="display:none;"></div>
+        </section>
+
+        <!-- Progress View -->
+        <section id="view-progress" class="view">
+            <h1>진도 현황</h1>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="prog-completed">0</div>
+                    <div class="stat-label">완료 일수</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="prog-total">100</div>
+                    <div class="stat-label">전체 일수</div>
+                </div>
+                <div class="stat-card accent">
+                    <div class="stat-value" id="prog-percent">0%</div>
+                    <div class="stat-label">진행률</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="prog-streak">0</div>
+                    <div class="stat-label">최장 연속</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Phase별 진행 상황</h3>
+                <div id="phase-progress-bars"></div>
+            </div>
+            <div class="card">
+                <h3>퀴즈 이력</h3>
+                <div id="quiz-history-list"></div>
+            </div>
+            <div class="card">
+                <h3>클라우드 동기화</h3>
+                <div id="gist-status" class="sync-status"></div>
+                <div id="gist-setup">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.75rem;">
+                        GitHub 토큰을 입력하면 모든 기기에서 자동 동기화됩니다.
+                        <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=DrugAI+Lab"
+                           target="_blank" style="color: var(--accent-light);">토큰 생성</a> (gist 권한만 체크)
+                    </p>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="password" id="gist-token" class="sync-textarea"
+                               style="flex:1; height:auto; padding:0.5rem 0.75rem;"
+                               placeholder="ghp_xxxxxxxxxxxx">
+                        <button class="btn btn-primary" onclick="setupGist()">연결</button>
+                    </div>
+                </div>
+                <div id="gist-connected" style="display:none;">
+                    <div class="sync-buttons">
+                        <button class="btn btn-primary" onclick="manualSync()">지금 동기화</button>
+                        <button class="btn btn-outline" onclick="disconnectGist()">연결 해제</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>수동 동기화</h3>
+                <div class="sync-buttons">
+                    <button class="btn btn-outline" onclick="shareProgress()">링크 공유</button>
+                    <button class="btn btn-outline" onclick="exportProgress()">내보내기</button>
+                    <button class="btn btn-outline" onclick="importProgress()">가져오기</button>
+                    <button class="btn btn-outline" style="color:var(--red);border-color:var(--red);" onclick="resetProgress()">초기화</button>
+                </div>
+                <textarea id="sync-data" class="sync-textarea" rows="2" placeholder="코드 내보내기/가져오기용..."></textarea>
+            </div>
+        </section>
+    </main>
+
+    <script src="static/js/app.js"></script>
+</body>
+</html>

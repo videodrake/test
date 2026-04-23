@@ -193,6 +193,21 @@
                     다음 학습으로 넘어가기 &rarr;
                 </button>
             </div>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3>질문 &amp; 피드백</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.75rem;">
+                    이해가 안 되는 부분, 더 알고 싶은 것, 의견을 남기세요. 다음 학습 업데이트에 반영됩니다.
+                </p>
+                <div id="feedback-list"></div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+                    <input type="text" id="feedback-input" class="sync-textarea"
+                           style="flex:1; height:auto; padding:0.5rem 0.75rem;"
+                           placeholder="질문이나 피드백을 입력하세요..."
+                           onkeydown="if(event.key==='Enter')submitFeedback()">
+                    <button class="btn btn-primary" onclick="submitFeedback()">등록</button>
+                </div>
+            </div>
         </section>
 
         <!-- Curriculum View -->

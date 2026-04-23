@@ -49,9 +49,13 @@ async function pushToGist(data) {
     const config = getGistConfig();
     if (!config?.token) return;
 
+    const feedback = loadFeedbackData();
     const body = {
         description: 'DrugAI Lab 학습 진도',
-        files: { 'drugai_progress.json': { content: JSON.stringify(data, null, 2) } },
+        files: {
+            'drugai_progress.json': { content: JSON.stringify(data, null, 2) },
+            'drugai_feedback.json': { content: JSON.stringify(feedback, null, 2) },
+        },
     };
 
     if (config.gist_id) {
@@ -303,6 +307,7 @@ async function loadToday() {
     document.getElementById('btn-advance').disabled = !allDone;
     currentQuizPhase = phase;
     currentQuizWeek = week;
+    renderFeedback();
 }
 
 async function completeTask(taskType) {
@@ -658,6 +663,72 @@ function checkSyncFromUrl() {
         history.replaceState(null, '', location.pathname);
         return false;
     }
+}
+
+// === 피드백/질문 ===
+const FEEDBACK_KEY = 'drugai_feedback';
+
+function loadFeedbackData() {
+    const raw = localStorage.getItem(FEEDBACK_KEY);
+    return raw ? JSON.parse(raw) : [];
+}
+
+function saveFeedbackData(items) {
+    localStorage.setItem(FEEDBACK_KEY, JSON.stringify(items));
+    if (getGistConfig()?.token) schedulePush(loadProgress());
+}
+
+function submitFeedback() {
+    const input = document.getElementById('feedback-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const data = loadProgress();
+    const [p, w, d] = data ? getPosition(data) : [1, 1, 1];
+
+    const items = loadFeedbackData();
+    items.push({
+        id: Date.now().toString(),
+        phase: p, week: w, day: d,
+        question: text,
+        answer: null,
+        created: new Date().toISOString(),
+    });
+    saveFeedbackData(items);
+    input.value = '';
+    renderFeedback();
+    showToast('질문이 등록되었습니다!');
+}
+
+function deleteFeedback(id) {
+    const items = loadFeedbackData().filter(f => f.id !== id);
+    saveFeedbackData(items);
+    renderFeedback();
+}
+
+function renderFeedback() {
+    const container = document.getElementById('feedback-list');
+    if (!container) return;
+
+    const items = loadFeedbackData();
+    if (items.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+
+    container.innerHTML = items.slice().reverse().map(f => `
+        <div class="feedback-item ${f.answer ? 'answered' : ''}">
+            <button class="fb-delete" onclick="deleteFeedback('${f.id}')">&times;</button>
+            <div class="fb-meta">P${f.phase}W${f.week}D${f.day} &middot; ${f.created.split('T')[0]}</div>
+            <div class="fb-question">${f.question}</div>
+            ${f.answer ? `<div class="fb-answer">${f.answer}</div>` : ''}
+        </div>
+    `).join('');
+}
+
+function exportFeedbackForRoutine() {
+    const items = loadFeedbackData().filter(f => !f.answer);
+    return JSON.stringify(items, null, 2);
 }
 
 // === Gist 설정 UI ===

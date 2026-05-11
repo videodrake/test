@@ -2,22 +2,66 @@
 
 아래 절차에 따라 학습 콘텐츠를 1일치 업데이트합니다.
 
-## 0단계: 환경 확인
+## 0단계: 환경 확인 + 진도 base 동기화 (가장 중요)
 
-프로젝트 루트(`~/test` 또는 레포지토리 경로)에서 실행합니다.
+> **이 단계를 건너뛰면 Day 5만 무한 반복하는 사고가 발생합니다.**
+> 매 세션은 새 브랜치(`claude/jolly-mccarthy-XXX`)에서 시작하지만, **출발점인 main은 PR이 머지될 때까지 갱신되지 않습니다.** 그래서 여러 세션이 모두 main만 보고 시작하면 같은 Day를 중복 작성하게 됩니다.
+> 따라서 매 루틴 시작 시 **미머지 `claude/*` 브랜치까지 모두 스캔해서 가장 진도 앞선 상태를 base로 선택**해야 합니다.
 
 ```bash
-cd ~/test  # 또는 프로젝트 경로
-git pull origin main  # 최신 상태 동기화
+cd ~/test
+git fetch origin --prune
+
+# 1) 후보: main + (현 main을 조상으로 가진 origin/claude/* 브랜치만)
+#    → 옛 폐기 커리큘럼(예: phase1_ml_foundations/) 브랜치는 자동 제외됨
+CANDIDATES=$(
+  echo main
+  git branch -r | grep -oE "origin/claude/[^ ]+" | sed 's|origin/||' | while read ref; do
+    if git merge-base --is-ancestor origin/main "origin/$ref" 2>/dev/null; then
+      echo "$ref"
+    fi
+  done
+)
+
+# 2) 후보 중 가장 많은 day*.md를 가진 base 선택 (동률은 최근 커밋 우선)
+BEST_BASE=$(
+  echo "$CANDIDATES" | while read ref; do
+    count=$(git ls-tree -r "origin/$ref" --name-only 2>/dev/null \
+      | grep -cE "curriculum/.*/day[0-9]+\.md$")
+    ts=$(git log -1 --format=%ct "origin/$ref" 2>/dev/null || echo 0)
+    printf "%05d %d %s\n" "$count" "$ts" "$ref"
+  done | sort -rn | head -1 | awk '{print $3}'
+)
+echo "[INFO] 진도 base = origin/$BEST_BASE"
+
+# 3) 현재 작업 브랜치를 BEST_BASE로 정렬 (현재 브랜치는 막 만들어진 빈 작업 브랜치이므로 안전)
+git reset --hard "origin/$BEST_BASE"
 ```
+
+**왜 `merge-base --is-ancestor` 필터가 필요한가**: 과거에 커리큘럼 구조를 재설계한 적이 있어 (`phase1_ml_foundations/` → `phase1_ai_foundations/`), 옛 구조에서 작성된 브랜치들이 원격에 그대로 남아있습니다. 그 브랜치들은 main의 후속이 아니라 main이 분기되기 전 시점에서 갈라졌으므로 위 필터로 자동 배제됩니다.
+
+**검증**: `find curriculum -name "day*.md" | sort | tail -3` 으로 가장 마지막에 작성된 Day가 다른 어떤 origin 브랜치보다 작거나 같지 않은지 확인합니다. 작다면 base 선택이 잘못된 것이므로 중단하고 사용자에게 보고합니다.
 
 ## 1단계: 현재 위치 파악 및 다음 Day 결정
 
 `curriculum/overview.yaml`을 읽어 전체 커리큘럼 구조를 파악합니다.
 
-다음으로 업데이트할 Day를 결정합니다:
-- 아직 콘텐츠가 작성되지 않은(= "콘텐츠 준비 중..."인) 가장 앞선 Day를 찾습니다.
+다음으로 업데이트할 Day를 결정하는 **유일한 기준**:
+- `find curriculum -name "day*.md" | sort` 결과에서 **가장 마지막 파일의 다음 Day**가 작성 대상입니다.
+- 예: 마지막이 `phase1.../week1.../day05.md` 이면 다음은 `phase1.../week2.../day01.md`.
 - overview.yaml에서 해당 Day의 `title`과 `content_path`를 확인합니다.
+
+**중복 방지 추가 검증** (반드시 수행):
+```bash
+# 결정한 작성 대상 Day가 이미 다른 origin 브랜치에 존재하는지 확인
+TARGET_PATH="curriculum/phase.../weekN_.../dayNN.md"  # 결정한 경로
+git branch -r | grep -oE "origin/claude/[^ ]+" | while read ref; do
+  if git ls-tree -r "$ref" --name-only 2>/dev/null | grep -q "^${TARGET_PATH}$"; then
+    echo "[WARN] $ref 에 이미 ${TARGET_PATH}가 존재합니다. base 선택을 재확인하세요."
+  fi
+done
+```
+경고가 출력되면 0단계의 base 선택이 그 브랜치를 놓쳤다는 뜻이므로 중단·재진단합니다.
 
 ## 2단계: 디렉토리 및 파일 준비
 
@@ -123,12 +167,29 @@ questions:
 python build.py
 git add -A
 git commit -m "Day [N] 콘텐츠: [Day 제목]"
-git push
+git push -u origin "$(git branch --show-current)"
 ```
+
+### 7-1단계: 사용자에게 PR 머지 요청 (필수)
+
+푸시만 하고 끝내면 main이 갱신되지 않아 **다음 루틴이 또 같은 Day를 작성**할 위험이 있습니다.
+0단계의 자동 base 동기화로 진도 누락은 막을 수 있지만, **장기적으로는 main에 머지되어야** 다른 협업자/세션과의 혼선이 사라집니다.
+
+루틴 종료 메시지에 다음을 반드시 포함합니다:
+
+```
+✅ Day [N] 푸시 완료 — 브랜치: claude/jolly-mccarthy-XXX
+⚠️  main에 머지가 필요합니다. PR을 만들어 머지하시거나 "PR 만들어줘"라고 말씀해주세요.
+   머지하지 않으면 미머지 브랜치가 누적되며, 진도 base 자동 선택에 부담이 커집니다.
+```
+
+사용자가 "PR 만들어줘" 또는 동등한 명시적 요청을 했을 때만 GitHub MCP 도구로 PR을 생성합니다.
 
 ## 8단계: 품질 자체 검증
 
 빌드 후 확인:
+- [ ] **진도가 1 진전했는지**: 작성한 Day 번호가 0단계 base 시점보다 정확히 1 큼
+- [ ] **중복 작성이 아닌지**: `git ls-tree -r origin/main --name-only`에 같은 경로가 없거나, 있다면 의도된 덮어쓰기인지 확인
 - [ ] .md 파일에 7개 섹션(개요~참고자료) 모두 존재
 - [ ] 4,000~6,000자 범위
 - [ ] 구체적 사례/수치 2개 이상
@@ -137,3 +198,5 @@ git push
 - [ ] 과제가 구체적이고 실행 가능
 - [ ] build.py 성공, JSON 파일 생성 확인
 - [ ] 퀴즈 정답 인덱스가 옵션 범위 내 (Day 5인 경우)
+
+만약 첫 번째 두 항목 중 하나라도 실패하면 **커밋·푸시를 하지 않고** 사용자에게 보고합니다.

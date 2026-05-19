@@ -1,0 +1,137 @@
+# Day 4: 전임상과 임상 — AI가 바꾸는 개발 전략
+
+> 이전 학습(Week 2 Day 3)에서 히트 발견·리드 최적화·다중목표 최적화(MPO)로 임상 후보(clinical candidate)까지 다듬는 과정을 다뤘습니다. 오늘은 그 후보가 **IND-enabling 전임상(preclinical)** 과 **Phase I~III 임상시험**을 통과해 시판까지 가는 마지막 구간을 학습하며, AI가 각 단계의 의사결정·실패 비용·운영 효율을 어떻게 재정의하는지 정리합니다.
+
+## 개요
+
+전임상·임상은 신약개발 전체 R&D 비용의 약 **65~70%**, 기간으로는 약 **6~8년**을 차지하며(Wouters et al., *JAMA*, 2020), 동시에 가장 큰 실패가 발생하는 구간입니다. Phase I 진입 후 시판 승인까지의 전체 누적 성공률은 약 **10~15%** 수준이고(BIO/QLS Industry Analysis, 2021), 특히 Phase II에서의 효능 실패가 누적 실패의 절반 이상을 차지합니다. AI는 이 구간에서 (1) 종간 변환·독성·PK 예측으로 **전임상 의사결정의 정밀도**를 올리고, (2) 환자 선별·바이오마커·적응형 디자인으로 **임상시험의 효율과 성공률**을 올리며, (3) digital twin·합성 대조군으로 **샘플 크기와 비용**을 줄이는 방향으로 진화하고 있습니다. 이번 Day는 약학 전공자가 익숙한 전임상·임상 프로세스를 AI 적용 지점과 함께 정렬해 그립니다.
+
+## 핵심 개념
+
+### 전임상(preclinical) 단계의 골격 — IND-enabling package
+
+후보(candidate) 분자가 임상에 진입하려면 미국 FDA의 **IND(Investigational New Drug)**, 한국 MFDS의 **임상시험계획승인(IND)** 신청에 필요한 데이터 패키지를 갖춰야 합니다. 약학 전공자에게 익숙한 구성을 정렬하면 다음과 같습니다.
+
+| 구성 영역 | 주요 내용 | 표준 가이드라인 |
+|----------|---------|---------------|
+| 약리학(Pharmacology) | 기전(mechanism), 1차 약효, 안전성 약리(중추·심혈관·호흡) | ICH S7A/S7B |
+| 약동학(PK/ADME) | 흡수·분포·대사·배설, 종간 비교, 대사체 동정 | ICH M3(R2) |
+| 일반독성(General toxicology) | 단회·반복투여 독성(설치류 + 비설치류) | ICH M3(R2), GLP |
+| 유전독성·발암성 | Ames, in vitro 염색체이상, in vivo 미세핵 | ICH S2(R1), S1 |
+| 생식·발생독성 | 수태능, 배·태자 발생, 출생 전후 발달 | ICH S5(R3) |
+| CMC | 원료의약품·완제 품질, 안정성, 불순물 | ICH Q시리즈 |
+
+**GLP(Good Laboratory Practice)** 하에서 수행되는 핵심 독성시험과 그 결과 도출되는 **NOAEL(No Observed Adverse Effect Level)** 은 임상 첫 용량(FIH dose) 산정의 기반이 됩니다. 약학 전공자가 약물학·독성학 수업에서 다룬 **allometric scaling**(체표면적 기반 동물-인간 용량 변환)과 **HED(Human Equivalent Dose)**, **MABEL(Minimum Anticipated Biological Effect Level)** 산정 절차가 이 단계의 핵심 의사결정 도구입니다(FDA Guidance for Industry: *Estimating the Maximum Safe Starting Dose in Initial Clinical Trials*, 2005).
+
+### 임상시험 단계 — Phase I·II·III·IV
+
+임상 단계는 약학 전공자가 임상약학·임상시험설계 수업에서 익숙하지만, AI 적용 맥락에서 다시 정렬합니다.
+
+| Phase | 목적 | 대상자 수(소분자 기준) | 통과 핵심 질문 | 산업 성공률 |
+|-------|-----|----------------------|--------------|------------|
+| Phase I | 안전성, MTD, PK | 20~100명(주로 건강 자원자, 항암은 환자) | "어느 용량까지 안전한가?" | 약 60~70% |
+| Phase II | 효능 신호·용량 결정, POC | 100~500명(환자) | "효능이 있는가, 어느 용량에서?" | 약 25~35% |
+| Phase III | 확증적 효능·안전성 | 1,000~5,000명 이상 | "기존 표준 대비 충분히 좋은가?" | 약 55~65% |
+| Phase IV | 시판 후 안전성·실사용 | 수만 명 수준 | "실사용에서 무엇이 드러나는가?" | — |
+
+각 단계 성공률은 BIO/QLS *Clinical Development Success Rates 2011-2020* 보고서의 산업 평균 추정이며, 적응증(특히 종양·신경계는 더 낮음)에 따라 큰 차이가 있습니다. **Phase II의 효능 실패가 신약개발 전체 실패의 가장 큰 단일 원인**이라는 사실은 AI 도입 우선순위 결정에서 중요합니다.
+
+### 임상 실패의 원인 분포 — AI가 줄여야 할 표적
+
+Harrison(*Nature Reviews Drug Discovery*, 2016)과 후속 산업 분석을 종합하면 임상 실패의 원인은 대략 다음으로 분포합니다.
+
+- **효능 부족(lack of efficacy)**: 약 40~50% — 표적 가설·환자 모집단 선택의 문제
+- **안전성·독성**: 약 25~30% — 종간 변환 실패, 인간 특이적 독성
+- **PK/생체이용률**: 약 5~10%
+- **상업성·전략적 결정**: 약 15~20%
+
+AI 도입 가치가 큰 영역은 **효능 실패(표적 적합 환자 선별)와 안전성 실패(독성 예측·바이오마커)** 입니다. 약학 전공자가 익숙한 PK/PD·바이오마커 개념이 AI 모델의 출력 해석과 직접 연결됩니다.
+
+## 작동 원리와 아키텍처
+
+### 전임상 단계의 AI 적용 — "동물-인간 변환의 불확실성을 정량화한다"
+
+전임상의 핵심 난제는 **종간 변환(species translation)** 입니다. 설치류·비설치류에서 측정한 PK·독성을 인간 임상 첫 용량으로 변환할 때 보수적 안전계수(10~100배)가 적용되며, 이 보수성은 비용을 키우는 동시에 일부 약물의 효능을 못 보게 만듭니다. AI는 두 방향으로 작용합니다.
+
+```
+[전통 전임상 의사결정]
+동물 PK/독성 데이터 → allometric scaling → 보수적 안전계수 적용 → FIH 용량
+                  → NOAEL 기반 1/10 또는 1/50
+
+[AI 보강된 의사결정]
+1. PBPK(Physiologically Based PK) 모델 + AI 파라미터 보정
+   - 입력: 분자 구조, in vitro ADME (CYP 클리어런스, PPB, Caco-2)
+   - 처리: 생리학적 구획 모델 + ML로 파라미터 예측
+   - 출력: 종간 PK 곡선, 인간 예측 노출량 + 불확실성
+2. 인간 특이적 독성 예측 모델
+   - hERG, DILI, 신독성, 유전독성 등 다중 표적 분류기
+   - 출력: 임상 단계에서 모니터링할 위험 신호 사전 식별
+3. 디지털 organ-on-chip·organoid + AI 분석
+   - 인간 세포 기반 in vitro 시스템의 영상·전기생리 데이터 학습
+```
+
+대표 도구로 **Simcyp(Certara), GastroPlus, PK-Sim**은 전통적 PBPK 플랫폼이며, 최근 AI 보강 버전과 분자 구조 기반 ADME 예측(예: ADMET-AI 오픈소스, Swanson et al., *Bioinformatics*, 2024)이 보편화되고 있습니다.
+
+### 임상 단계의 AI 적용 — 4가지 축
+
+임상시험에서 AI가 가치를 만드는 영역을 4가지 축으로 정리합니다.
+
+| 축 | 무엇을 푸는가 | 대표 접근 | 약학 전공자의 기여 |
+|----|------------|---------|------------------|
+| 환자 선별(patient stratification) | 효능을 볼 가능성이 큰 환자만 등록 | 바이오마커·전사체·영상 기반 분류기 | 약리·기전 정합성 판단 |
+| 적응형·바이오마커 디자인 | 시험 도중 용량·arm 조정 | Bayesian adaptive, biomarker-driven | 용량-반응 곡선 해석 |
+| 운영 효율(operations) | 등록 가속, 사이트 선정, 이탈 예측 | EHR/EMR 마이닝, NLP, RWE | 임상 시나리오의 의학적 타당성 검토 |
+| 합성 대조군(digital twin) | 표준치료 arm을 외부 데이터로 대체 | Unlearn.AI, Medidata Acorn AI | endpoint·시간 척도 정합성 검증 |
+
+### 합성 대조군과 digital twin — 통계적 효율과 윤리
+
+특히 희귀질환·소아·중증 적응증에서 환자 모집과 위약군 배정이 어려운 상황에서, **합성 대조군(synthetic control arm)** 과 **digital twin**(개인별 가상 환자 시뮬레이션)이 부상하고 있습니다. Unlearn.AI는 알츠하이머·다발성경화증·파킨슨 등에서 환자의 baseline 데이터를 입력해 12~24개월 후 표준치료 결과의 분포를 예측하는 모델을 제안하고 EMA의 qualification opinion(2022)을 받은 것으로 보도된 바 있습니다. 이는 **각 환자에게 약을 주고 동시에 가상 대조군과 비교**하는 형태로 샘플 크기를 줄입니다.
+
+> 합성 대조군의 핵심 위험은 **외부 데이터의 selection bias·시간 효과**입니다. 약학 전공자는 endpoint 정의·측정 주기·집단 특성의 정합성을 검증할 수 있어야 하며, 이는 임상시험설계 수업에서 다룬 historical control의 한계와 동일한 논점입니다.
+
+## 신약개발 적용
+
+### 실제 사례 — AI가 임상 단계에 적용된 구체적 진전
+
+- **Insilico Medicine — INS018_055(IPF)의 임상 진전**: Week 2 Day 2에서 TNIK 발굴, Day 3에서 Chemistry42로 후보 도출까지 다룬 분자가 2023년 Phase I 진입, 2024년 Phase IIa로 진전한 것으로 보도되었습니다(Ren et al., *Nature Biotechnology*, 2024). 본 사례는 **AI가 발굴부터 임상까지 일관된 파이프라인을 보여준 동시대 표준 사례**로 인용되며, 효능 결과는 2025~2026년 보고를 기다리는 상태입니다(확인 필요).
+- **Unlearn.AI — digital twin 기반 임상시험**: 알츠하이머 Phase II/III에서 환자별 prognostic score를 통제 변수로 사용해 위약군 규모를 줄이는 procognia-style 디자인이 다수 스폰서와 협업으로 진행 중이며, EMA의 qualification opinion(2022)이 외부 검증 사례로 보고됩니다.
+- **Owkin — 임상 바이오마커 발굴**: 종양 조직 영상·전사체에 대한 federated learning으로 lung·breast cancer 환자의 면역치료 반응 예측 모델을 발표(Saldanha et al., *Nature Medicine*, 2022 등). 다수 병원의 환자 데이터를 모이지 않게 유지하면서 모델만 공유하는 구조는 데이터 프라이버시 측면에서 신약 임상에서도 점차 표준화되고 있습니다.
+- **Tempus AI — RWE 기반 환자 선별과 NSCLC 등 적응증 매칭**: 분자진단·EHR 통합 플랫폼이 종양 임상시험의 환자 매칭 비율과 등록 속도를 개선한 것으로 보도되며, 2024년 IPO 이후 매출 확장이 보고된 사례입니다.
+- **AiCure — 환자 복약 모니터링**: 스마트폰 카메라 기반 복약 확인 AI로 임상시험의 protocol adherence를 개선, dropout과 효능 noise를 줄이는 도구가 다수 임상에서 채택되었습니다.
+
+### 전통 임상 운영과 AI 보강의 비교
+
+| 항목 | 전통 운영 | AI 보강 운영 |
+|------|---------|------------|
+| 환자 모집 기간 | 평균 18~24개월(Phase III) | 사이트 선정 ML로 20~40% 단축 보고 |
+| 환자 선별 정밀도 | 임상의의 입력 기준 | 바이오마커·전사체 분류기로 효능 가능성 ↑ |
+| 위약군 규모 | 표준 1:1 또는 2:1 | digital twin/RWE 통합으로 일부 축소 |
+| 의사결정 빈도 | 중간분석 1~2회 | Bayesian adaptive로 연속적 |
+| 데이터 소스 | EDC 중심 | EHR·웨어러블·RWD 통합 |
+
+> 위 수치는 산업 보도와 사례 보고 기반의 평균이며, 적응증·국가·규제기관에 따라 적용 가능 범위가 다릅니다. 약학 전공자는 회사 마케팅의 "20% 단축"이 어느 단계·어느 적응증의 수치인지 정확히 분해해서 해석해야 합니다.
+
+### 규제기관의 입장 — AI는 도구이지 의사결정 주체가 아니다
+
+FDA는 *Using Artificial Intelligence and Machine Learning in the Development of Drug and Biological Products: Discussion Paper and Request for Feedback*(2023)을 통해 AI/ML 적용 시 (1) 모델 학습·검증 데이터의 적합성, (2) 모델의 reproducibility, (3) human-in-the-loop의 명확성을 요구했으며, 2024~2025년의 후속 가이드라인 초안에서 임상시험 보조 도구로서 AI의 적격성 평가 절차가 구체화되고 있습니다(확인 필요 — 정확한 문서명·연도는 인용 시 FDA 사이트에서 재확인 권장). MFDS도 2024년 *AI 기반 의약품 개발 가이드라인*을 발표하고 임상·전임상 단계의 AI 적용 시 검증 요건을 제시한 바 있습니다(확인 필요). 약학 전공자가 본 규제 프레임을 이해하면 AI 기능을 **임상시험계획서·CMC 문서·임상시험 보고서**의 어디에 어떻게 기술해야 하는지 직관적으로 잡을 수 있습니다.
+
+## 창업 관점
+
+Phase 1 단계이므로 두 문장으로 짚습니다. 전임상·임상 영역은 빅파마와의 협업·규제 신뢰가 진입장벽이지만, **단일 적응증의 환자 선별 바이오마커 SaaS**나 **PBPK/AI ADME 통합 보고서 자동 생성 도구**처럼 좁은 운영적 가치 영역은 약학 전공자가 의학적 정합성·문서화 품질로 차별화할 수 있는 출발점이며, 전체 시장 규모·BM 비교는 Phase 5에서 다룹니다.
+
+## 오늘의 과제
+
+1. **임상 실패 데이터로 'AI가 가장 가치 큰 영역' 도출 (45분)**: BIO/QLS *Clinical Development Success Rates 2011-2020* 보고서 또는 Wong et al.(*Biostatistics*, 2019)의 임상시험 성공률 분석 자료에서 적응증(종양·심혈관·신경계·감염·희귀질환 5개군)별 Phase II/III 성공률과 주된 실패 원인을 표로 정리합니다. "AI를 어디에 먼저 투자해야 ROI가 가장 큰가"를 한 문단으로 결론짓고, 그 이유를 약학 전공자 관점(기전·바이오마커 가용성·환자 이질성)으로 보강합니다. 출처 URL이 확실치 않으면 보고서 제목·연도만 명시합니다.
+2. **두 회사의 임상 AI 접근 비교 — Unlearn.AI vs Tempus AI (40분)**: 두 회사의 (a) 핵심 가치 제안(digital twin vs 환자 매칭), (b) 주요 적응증, (c) 규제기관 협업 사례, (d) 데이터 소스(시험 데이터 vs RWE), (e) 빅파마 파트너십 형태를 1페이지 비교표로 작성합니다. "약학 전공 창업자가 한국 시장에서 동일 BM을 시도할 때의 데이터 가용성 차이"를 한 문단으로 분석합니다.
+3. **FIH 용량 산정 시뮬레이션 — AI 출력의 검증 (30분)**: 가상의 표적 X에 대한 후보 분자의 (a) 동물 PK·NOAEL(예: 랫트 10 mg/kg, 개 5 mg/kg), (b) AI ADMET 모델이 예측한 인간 클리어런스·hERG IC50, (c) PBPK 시뮬레이션 결과를 가정하고, MABEL과 NOAEL 두 접근으로 FIH 용량을 계산합니다. 결과가 차이날 때 약학 전공자로서 어느 쪽을 우선할지, 그 이유를 5~7줄로 작성합니다. 가상 데이터여도 무방하며, 의사결정 논리의 정확성이 핵심입니다.
+
+## 참고 자료
+
+- Wouters, O.J., McKee, M., Luyten, J. (2020). "Estimated research and development investment needed to bring a new medicine to market, 2009-2018." *JAMA*, 323(9), 844-853. — R&D 비용 추정의 표준 인용.
+- Harrison, R.K. (2016). "Phase II and phase III failures: 2013-2015." *Nature Reviews Drug Discovery*, 15, 817-818. — 임상 실패 원인 분포.
+- Wong, C.H., Siah, K.W., Lo, A.W. (2019). "Estimation of clinical trial success rates and related parameters." *Biostatistics*, 20(2), 273-286. — 적응증별 성공률 분석.
+- Saldanha, O.L. *et al.* (2022). "Swarm learning for decentralized artificial intelligence in cancer histopathology." *Nature Medicine*, 28, 1232-1239. — federated/swarm 학습의 임상 적용.
+- FDA (2023). *Using Artificial Intelligence and Machine Learning in the Development of Drug and Biological Products* (Discussion Paper). — 신약개발 AI 적용 규제 프레임의 기초 문서.
+- ICH M3(R2) — *Nonclinical Safety Studies for the Conduct of Human Clinical Trials*. 전임상 패키지의 국제 표준.
+- Simcyp / Certara — PBPK 모델링 산업 표준 플랫폼.
+- Unlearn.AI — 임상시험 digital twin 대표 회사.

@@ -1,0 +1,154 @@
+# Day 1: QSAR의 역사와 원리 — 구조가 활성을 결정한다
+
+> 이전 학습(Phase 1 Day 20)에서 AI 신약개발의 사면체(학습 원리·파이프라인·분자 표현·데이터·평가) 좌표계를 완성했습니다. 오늘부터 Phase 2 Week 1은 그 좌표계 중 **(C) 분자 표현 + (A) 학습 원리 + (D) 평가의 교차점**인 분자 물성 예측(QSAR)을 깊이 들어갑니다. 첫 Day는 QSAR의 역사적 출발점과 변하지 않는 핵심 원리를 다룹니다.
+
+## 개요
+
+**정량적 구조-활성 관계(Quantitative Structure-Activity Relationship, QSAR)**는 분자의 구조 정보로부터 그 분자의 활성, 물성, 독성을 예측하는 통계적·계산적 방법론입니다. 1962년 Hansch와 Fujita가 옥신 유사 식물 호르몬의 활성을 분자의 소수성·전자적·입체적 파라미터로 회귀한 것이 현대적 QSAR의 출발이며, 이후 60여 년 동안 약학과 화학정보학(cheminformatics)의 가장 견고한 도구가 되어 왔습니다. 오늘날 GNN, Transformer 같은 딥러닝 모델조차 본질적으로는 "구조 → 활성"이라는 QSAR의 가설을 신경망으로 일반화한 것입니다. Phase 2 Week 1은 QSAR을 깊이 학습해, Hansch 회귀에서 D-MPNN까지의 연속선 위에서 자신의 모델이 어느 지점에 있는지를 정확히 가늠하는 능력을 만드는 것이 목표입니다.
+
+## 핵심 개념
+
+### 1) QSAR의 정의와 출발점 — Hansch-Fujita 가설
+
+QSAR은 다음의 단순한 가정에서 출발합니다.
+
+> **분자의 활성 = f(분자 구조의 정량적 표현)**
+
+여기서 f는 회귀 함수일 수도, 결정 트리일 수도, 깊은 신경망일 수도 있지만, 입력이 "분자 구조의 정량적 표현"이라는 점은 변하지 않습니다. 1962년 **Hansch-Fujita 방정식**은 다음 형태였습니다.
+
+```
+log(1/C) = a·π + b·σ + c·Es + d
+```
+
+여기서 C는 활성을 일으키는 농도, π는 **소수성 파라미터(logP 기반)**, σ는 **Hammett 전자 파라미터**, Es는 **Taft 입체 파라미터**입니다. 약학 전공자에게 익숙한 통찰 — 약물의 활성이 logP, pKa, 분자 크기 같은 물리화학적 속성과 연관된다는 직관 — 이 정량 방정식으로 처음 형식화된 사건이었습니다. 이 식이 가능했던 전제는 두 가지로, ① 구조가 활성을 결정한다는 가정과 ② 그 관계가 가법적·선형적이라고 가정할 수 있을 만큼 좁은 화학 공간(congeneric series)에 한정한다는 것입니다.
+
+### 2) QSAR의 세 시대 — 선형 → 비선형 → 표현 학습
+
+QSAR은 60년에 걸쳐 세 번의 패러다임 전환을 겪었습니다. Phase 2 Week 1 전체의 지도이기도 합니다.
+
+| 시대 | 시기 | 표현 | 모델 | 한계 |
+|------|------|------|------|------|
+| **1세대: Hansch QSAR** | 1962~1990s | 물리화학 파라미터(logP·σ·Es) 수십 개 | 다중선형회귀(MLR) | congeneric series 외에서 무너짐 |
+| **2세대: Fingerprint QSAR** | 1990s~2010s | ECFP·MACCS 등 분자 지문(2,048bit) | Random Forest·SVM·XGBoost (Day 2) | 지문 설계 의존, 비선형 한계 일부 잔존 |
+| **3세대: 표현 학습 QSAR** | 2015~현재 | 분자 그래프·SMILES 직접 학습 | GNN(D-MPNN, Day 3)·Transformer(Day 4) | 데이터·해석성·OOD 일반화 문제 잔존 |
+
+핵심은 **표현(C 축)이 학습되느냐 사람이 설계하느냐**의 차이입니다. 1·2세대는 사람이 표현을 설계하고 모델은 회귀만 합니다. 3세대는 표현 자체를 모델이 학습합니다(end-to-end). 약학 전공자에게 이 구분이 중요한 이유는 — 1세대는 logP 같은 친숙한 변수의 해석성을 보존하고, 3세대는 해석성을 일부 희생하는 대신 큰 데이터에서 정확도를 얻기 때문입니다. 데이터가 적고(N<1,000) 해석이 필요한 규제 제출용 모델은 여전히 1·2세대가 합리적인 선택입니다.
+
+### 3) "유사한 분자는 유사한 활성을 가진다"는 가설과 그 균열
+
+QSAR의 두 번째 전제는 **분자 유사도-활성 유사도 가설(Similar Property Principle)**입니다. 두 분자가 구조적으로 비슷하면 활성도 비슷할 것이라는 가정이며, 이는 약학에서 SAR(Structure-Activity Relationship) 분석의 직관과 정확히 일치합니다. 그러나 이 가설은 **활성 절벽(activity cliff)** 현상에서 무너집니다 — 한 원자만 바뀌었는데 활성이 100배 변하는 경우가 SAR 데이터셋에서 5~10%에 달하는 것으로 보고됩니다. 약학 전공자는 이 현상을 약리학적으로 이해합니다 — 결합 포켓의 특정 수소결합 거리, 카이랄 환경, π-stacking 각도가 결정적인 표적에서는 작은 치환기 하나가 ΔG_binding을 수 kcal/mol 단위로 바꿉니다. Phase 2 Week 1에서 다룰 모든 모델은 activity cliff에서 일관되게 약점을 보이며, 평가 지표를 설계할 때 (D 축, Day 18에서 다룬 cliff metric) 이 점을 반드시 분리 보고해야 합니다.
+
+### 4) QSAR의 5가지 응용 — 활성·물성·ADMET·독성·선택성
+
+QSAR의 좁은 정의는 "활성 예측"이지만, 현대 신약개발에서는 다음 다섯 영역에 모두 같은 방법론이 적용됩니다.
+
+| 응용 | 예측 대상 | 약학적 의미 |
+|------|---------|---------|
+| **활성** | IC50, Ki, EC50 | 표적 결합 강도, 약효 |
+| **물성** | logP, logS, pKa, melting point | 제형·생체이용률 결정 |
+| **ADMET** | BBB, CYP, hERG, Clearance | 임상 실패 60% 예방(Phase 2 Week 3) |
+| **독성** | Ames, DILI, 변이원성 | 규제 제출 필수 항목 |
+| **선택성** | 표적 vs 오프타겟 비율 | 부작용 프로파일 |
+
+같은 QSAR 알고리즘을 다른 데이터셋에 적용하는 것이 핵심이며, 그래서 ChEMBL·TDC 같은 대규모 어세이 데이터(Day 16·19)가 QSAR의 한계를 결정하는 자원이 됩니다. 약학 전공자가 이 다섯 영역의 임상적 우선순위를 알고 있다는 점이 모델 개발 의사결정에 직접 작동합니다 — 예를 들어 hERG 모델은 가짜 양성을 잡는 것이 가짜 음성을 잡는 것보다 비대칭적으로 중요하다는 임상적 판단을 모델 손실함수와 임계값에 반영할 수 있어야 합니다.
+
+### 5) 좋은 QSAR 모델의 OECD 5원칙 — 규제적 시선
+
+OECD가 2007년 공표한 QSAR 모델 검증 5원칙은 지금도 FDA·EMA·MFDS의 AI 모델 검토 기준으로 사용됩니다.
+
+| 원칙 | 내용 | Phase 1 좌표계 |
+|------|------|-------------|
+| 1. 정의된 endpoint | 무엇을 예측하는지 명확 | B (파이프라인 단계) |
+| 2. 명시적 알고리즘 | 모델 구조와 학습 절차 공개 | A (학습 원리) |
+| 3. 정의된 applicability domain | 적용 가능한 화학 공간 명시 | C·D (표현·평가) |
+| 4. 적합도·견고성·예측성 지표 | 통계적 검증 | D (평가) |
+| 5. 기계적 해석 가능성(가능하면) | 작동 원리의 해석 | A·B |
+
+이 5원칙은 단순한 규제 형식이 아니라 **좋은 QSAR 모델의 정의** 그 자체입니다. 특히 3번(applicability domain)은 약학 전공자가 자주 비전공자보다 더 정확히 인식하는 영역으로, "이 모델은 어떤 약물군의 어떤 농도 범위에서 신뢰할 수 있는가"를 명시할 수 있어야 합니다. Phase 4 Week 4(규제)에서 다시 깊이 다룰 내용이지만, Phase 2의 시작점에서 이 5원칙을 좌표계로 갖고 있어야 합니다.
+
+## 작동 원리와 아키텍처
+
+### QSAR 모델의 표준 구성
+
+모든 QSAR 모델은 시대를 막론하고 다음의 4단계 파이프라인을 공유합니다.
+
+```
+[1. 분자 입력]
+   SMILES 또는 SDF
+   ↓ 표준화(Day 17): 염 제거·tautomer 표준화·canonicalization
+
+[2. 표현(Featurization)]
+   1세대: logP·σ·Es 같은 물리화학 파라미터 (수십 개)
+   2세대: ECFP4·MACCS·RDKit 기술자 (수백~수천 차원)
+   3세대: 분자 그래프 그대로 → GNN으로 임베딩 학습
+
+[3. 회귀/분류 모델]
+   1세대: 다중선형회귀(MLR), PLS
+   2세대: Random Forest, SVM, XGBoost
+   3세대: D-MPNN, AttentiveFP, Chemprop, MolFormer
+
+[4. 출력 + 불확실성]
+   회귀값(pIC50, logP) 또는 분류 확률
+   + Applicability Domain 점수
+   + 예측 신뢰구간(MC Dropout, Ensemble Variance)
+```
+
+### 베이스라인 선택의 결정 트리
+
+Phase 2 Week 1 Day 5에서 모델 선택 가이드를 종합하지만, 첫 베이스라인을 잡는 결정 트리는 지금 시점에서도 정리할 수 있습니다.
+
+| 데이터 N | 추천 1차 베이스라인 | 추천 2차 비교 모델 |
+|---------|----------------|---------------|
+| N < 500 | ECFP4 + Random Forest | Hansch 스타일 MLR(해석성) |
+| 500 ≤ N < 5,000 | ECFP4 + XGBoost (Day 2) | RDKit 기술자 + XGBoost |
+| N ≥ 5,000 | D-MPNN(Chemprop, Day 3) | MolFormer 미세조정(Day 4) |
+| N ≥ 50,000 | Transformer 사전학습 활용 | D-MPNN 멀티태스크 |
+
+이 트리는 바이브코딩으로 첫 실험을 빠르게 설계할 때의 출발점입니다. 약학 전공자라면 "N=2,000짜리 자체 hERG 데이터로 무엇부터 시작할까"라는 질문에 즉시 "ECFP4 + XGBoost를 1주일 안에, scaffold split·5-seed·EF@top-100 동시 보고로"라고 답할 수 있어야 합니다.
+
+### applicability domain — Phase 2 전체에서 반복될 개념
+
+OECD 3번 원칙의 핵심인 **적용 가능성 영역(Applicability Domain, AD)**은 "이 모델이 어떤 화학 공간에서 신뢰 가능한가"를 정의하는 영역입니다. 주요 정의 방식은 다음과 같습니다.
+
+- **거리 기반**: 학습 데이터와의 평균 Tanimoto 유사도 임계값(예: 0.4 이상)
+- **밀도 기반**: 학습 분포의 k-NN 밀도
+- **불확실성 기반**: ensemble variance가 임계값 이하
+
+약학적으로 보면 AD는 "이 모델이 어떤 약물군에 적용 가능한가"의 정량 정의입니다. CNS 약물 학습 데이터로 만든 BBB 모델은 antibiotic 화합물에 적용했을 때 AD 점수가 낮게 나와야 정상이며, 그렇지 않다면 모델이 표면적 특징만 학습한 신호일 수 있습니다.
+
+## 신약개발 적용
+
+### 사례 1 — Lipinski's Rule of Five와 QSAR의 결합
+
+1997년 Pfizer의 **Lipinski's Rule of Five**(분자량<500, logP<5, HBD<5, HBA<10)는 경구 흡수 가능성의 휴리스틱이며, 그 자체가 QSAR 1세대의 직계 후손입니다. 현재는 Lipinski 규칙을 1차 필터로 두고, ECFP4 + Random Forest로 만든 더 정교한 흡수 예측 모델을 2차 평가로 두는 것이 표준 워크플로우입니다. 약학 전공자라면 Lipinski의 한계 — peptide·natural product·PROTAC 같은 새 모달리티에 적용되지 않음 — 를 알기 때문에 1차 필터를 모달리티별로 조정해야 한다는 의사결정을 즉시 내릴 수 있습니다.
+
+### 사례 2 — Insilico Medicine Chemistry42와 QSAR 멀티태스크
+
+**Insilico Medicine**의 Chemistry42는 분자 생성과 함께 60개 이상의 QSAR 모델을 멀티태스크로 운영하며, 각 후보 분자에 대해 활성·ADMET·합성가능성을 동시에 점수화한다고 보도되었습니다(확인 필요: 구체적 모델 수). Phase 2 Week 1의 학습 가치는 — 이 60개의 모델이 본질적으로는 같은 표현(분자 그래프) + 다른 헤드(task별)라는 점을 이해하는 데 있습니다. 즉, Phase 2 Week 1의 QSAR 모델 한 개를 만드는 능력이 Insilico 수준 시스템의 한 부품을 만드는 능력과 직결됩니다.
+
+### 사례 3 — Schrödinger의 LiveDesign과 QSAR 통합
+
+**Schrödinger**의 LiveDesign 플랫폼은 medicinal chemist의 SAR 분석 워크플로우 안에 자동 QSAR 모델 학습을 통합한 사례입니다. 화학자가 새로운 시리즈 데이터를 업로드하면 자동으로 1·2세대 QSAR 모델을 학습해 SAR 가설을 시각화합니다. 약학 전공자에게 시사점은 — QSAR 모델이 "오프라인 분석 도구"가 아니라 "medicinal chemist의 일상 워크플로우에 통합된 도구"라는 점이며, 이는 Phase 4·5의 제품 설계에서 다시 다룰 통찰입니다.
+
+### 사례 4 — Stokes et al. (2020) Halicin 발견과 QSAR의 한계
+
+2020년 MIT 팀이 발표한 **Halicin** 발견은 EColi 항생 활성에 대한 D-MPNN QSAR 모델을 ZINC 라이브러리(1억 개 이상)에 적용해, 기존 항생제와 구조적으로 매우 다른 후보를 찾아낸 사례입니다(Stokes et al., *Cell*, 2020). 이 사례가 보여준 두 가지 — ① 3세대 표현 학습 모델은 1·2세대가 찾지 못하는 chemotype을 발견할 수 있다, ② 그러나 학습 데이터가 적었던 영역에서는 여전히 많은 가짜 양성이 나왔다. 즉, QSAR의 가능성과 한계를 같은 사례가 동시에 보여줍니다.
+
+## 창업 관점
+
+Phase 2 단계의 창업 관점은 짧게 언급합니다. QSAR 시장은 ChemAxon, Schrödinger, BIOVIA 같은 30년 차 플레이어가 있고, 신생 스타트업이 동일한 범용 QSAR 플랫폼으로 정면 경쟁하는 것은 무리입니다. 약학 전공자의 진입점은 **(1) 특정 약물군·표적군에 특화한 QSAR**(예: CYP3A4-DDI 특화, 펩타이드 특화), **(2) 약사·medicinal chemist의 워크플로우에 깊이 통합된 UX**(LiveDesign 같은 통합 형태), 또는 **(3) 규제 제출용 OECD 5원칙 준수 QSAR + 문서화 자동화**라는 세 방향입니다. 세 번째는 특히 약학 전공자가 임상·규제 맥락을 이해한다는 차별점이 직접 작동하는 영역입니다.
+
+## 오늘의 과제
+
+1. **Hansch-Fujita 원논문 핵심 읽기 (40분)**: Hansch & Fujita (1964) "ρ-σ-π Analysis. A Method for the Correlation of Biological Activity and Chemical Structure", *Journal of the American Chemical Society*, 86(8), 1616–1626. Abstract와 도입부, 결론을 읽고 — ① 그들이 어떤 데이터셋(어떤 호르몬 유사체)에 적용했는지, ② π·σ·Es 세 파라미터의 약학적 의미, ③ 60년 후 ECFP·D-MPNN에 그대로 살아남은 직관 — 세 가지를 1쪽으로 정리합니다.
+
+2. **QSAR 3세대 비교 표 작성 (30분)**: 본인이 관심있는 ADMET 항목 1개(BBB 또는 hERG 추천)를 골라, TDC 또는 ChEMBL에서 데이터 N을 확인하고, Phase 2 Week 1 Day 1 본문의 베이스라인 결정 트리에 대입해 어느 모델로 시작해야 하는지를 결정합니다. 결정 근거를 표(데이터 N·표적 다양성·임상 임계값)로 정리합니다.
+
+3. **OECD 5원칙 자체 점검표 만들기 (30분)**: 본인이 Phase 5에서 만들 SaaS의 첫 모델이 OECD 5원칙 각 항목을 어떻게 충족할지를 표로 정리합니다. 특히 3번(applicability domain)을 어떤 정의 방식(거리·밀도·불확실성)으로 정량화할지를 명시합니다. 이 표는 Phase 4 Week 4(규제) 학습에서 다시 발전시킬 출발점이 됩니다.
+
+## 참고 자료
+
+- Hansch, C., Fujita, T. (1964). "ρ-σ-π Analysis. A Method for the Correlation of Biological Activity and Chemical Structure." *Journal of the American Chemical Society*, 86(8), 1616–1626. — 현대 QSAR의 출발점 논문. 60년이 지난 지금도 이 직관은 모든 QSAR 모델의 뿌리.
+- Stokes, J. M. *et al.* (2020). "A Deep Learning Approach to Antibiotic Discovery." *Cell*, 180(4), 688–702. — 3세대 표현 학습 QSAR(D-MPNN)로 Halicin을 발견한 사례. QSAR의 가능성과 한계를 한 논문에서 본다.
+- OECD (2007). "Guidance Document on the Validation of (Quantitative) Structure-Activity Relationship Models." OECD Series on Testing and Assessment No. 69. — 5원칙의 원전. 규제 제출용 QSAR이 충족해야 할 기준의 표준.
+- Chemprop(Chemprop.csail.mit.edu)과 RDKit(rdkit.org) — 1·2·3세대 QSAR을 모두 같은 라이브러리에서 시도해볼 수 있는 표준 도구. Phase 2 Week 1 전체에서 반복 등장.

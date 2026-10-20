@@ -2,47 +2,41 @@
 
 아래 절차에 따라 학습 콘텐츠를 1일치 업데이트합니다.
 
-## 0단계: 환경 확인
+## 0단계: 환경 확인과 최신 동기화
 
-프로젝트 루트(`~/test` 또는 레포지토리 경로)에서 실행합니다.
-
-```bash
-cd ~/test  # 또는 프로젝트 경로
-git pull origin main  # 최신 상태 동기화
-```
-
-## 1단계: 현재 위치 파악 및 다음 Day 결정
-
-`curriculum/overview.yaml`을 읽어 전체 커리큘럼 구조를 파악합니다.
-
-다음으로 업데이트할 Day를 결정합니다:
-- 아직 콘텐츠가 작성되지 않은(= "콘텐츠 준비 중..."인) 가장 앞선 Day를 찾습니다.
-- overview.yaml에서 해당 Day의 `title`과 `content_path`를 확인합니다.
-
-## 2단계: 디렉토리 및 파일 준비
-
-해당 Day의 `content_path` 디렉토리가 없으면 생성합니다:
+프로젝트 루트에서 **main 브랜치**에서 직접 작업합니다.
 
 ```bash
-mkdir -p curriculum/phase1_ai_foundations/week1_ai_basics/quiz
-# content_path의 디렉토리 부분에 맞게 조정
+cd ~/test
+git checkout main
+git pull origin main
 ```
 
-이전 Day의 .md 파일을 읽어 연결점을 파악합니다:
-- Day 2~5: 같은 Week의 이전 Day .md 파일
-- Day 1: 이전 Week의 Day 5 .md 파일 (Phase 첫 Day면 생략)
+## 1단계: 다음 Day 결정
+
+`curriculum/overview.yaml`에서 모든 Day의 `content_path`를 순서대로 확인합니다.
+해당 .md 파일이 존재하지 않는 가장 앞선 Day가 다음 작성 대상입니다.
+
+```
+확인 방법:
+1. overview.yaml에서 Phase 1 → Week 1 → Day 1부터 순회
+2. 각 Day의 content_path (예: phase1_ai_foundations/week1_ai_basics/day01.md)
+3. curriculum/ 아래에 해당 파일이 존재하는지 확인
+4. 존재하지 않는 첫 번째 Day = 오늘 작성할 Day
+```
+
+## 2단계: 디렉토리 준비 + 이전 Day 확인
+
+해당 Day의 디렉토리가 없으면 생성합니다.
+이전 Day의 .md 파일을 읽어 연결점을 파악합니다.
 
 ## 3단계: CONTENT_GUIDELINES.md 읽기
 
-`CONTENT_GUIDELINES.md`를 읽고 모든 규칙을 따릅니다. 특히:
-- 섹션 구조 (개요/핵심개념/작동원리/신약적용/창업관점/과제/참고자료)
-- Phase별 창업 관점 비중 조절
-- 약학 전공자 관점 연결
-- 4,000~6,000자 범위
+`CONTENT_GUIDELINES.md`를 읽고 모든 규칙을 따릅니다.
 
 ## 4단계: 콘텐츠 작성
 
-해당 Day의 .md 파일을 아래 구조로 **완전히 새로 작성**합니다.
+해당 Day의 .md 파일을 아래 구조로 작성합니다 (4,000~6,000자):
 
 ```markdown
 # Day N: [overview.yaml의 title]
@@ -50,90 +44,43 @@ mkdir -p curriculum/phase1_ai_foundations/week1_ai_basics/quiz
 > 이전 학습에서 [X]를 다뤘습니다. 오늘은 이를 바탕으로 [Y]를 학습합니다.
 
 ## 개요
-(3-5문장. 정의 + 왜 중요한지.)
-
 ## 핵심 개념
-(학술적 톤. 용어 정의, 원리, 메커니즘. 약학 지식 연결.)
-
 ## 작동 원리와 아키텍처
-(입력→처리→출력. 바이브코딩 시 필요한 구조적 이해.)
-
 ## 신약개발 적용
-(구체적 사례 — 회사명, 연도, 수치. 기존 방법 대비 비교.)
-
 ## 창업 관점
-(Phase별 비중: P1→1-2문장, P2-3→제품+경쟁, P4-5→시장+BM+MVP)
-
 ## 오늘의 과제
-(2-3개. 30-60분 내 완료 가능. 기초학습/비즈니스분석/리서치 조합.)
-
 ## 참고 자료
-(논문 1-2개 + 회사/도구 1-2개)
 ```
 
-### 작성 핵심 규칙
-- 코드 블록 3개 이하 (의사코드/아키텍처만)
-- 약학 전공 지식 → 실제 경쟁력으로 연결
-- 구체적 사례/수치 2개 이상
-- 경어체, 용어 한영 병기
-- 최신 정보 필요 시 WebSearch로 검색하여 보강 (확인 불가 시 "확인 필요" 표기)
-- URL은 존재 여부를 확신할 수 없으면 기재하지 않음 (제목+저자+연도만)
+작성 규칙:
+- 코드 블록 3개 이하, 약학 지식 연결, 구체적 사례 2개+, 경어체, 한영 병기
+- 최신 정보는 WebSearch로 보강 (확인 불가 시 "확인 필요" 표기)
 
 ## 5단계: 피드백 응답
 
-Gist 설정이 되어있다면 drugai_feedback.json을 확인합니다.
-로컬에서는 `data/feedback.json`이 있으면 확인합니다.
+`data/feedback.json`이 있으면 미응답(`answer`가 null) 피드백에 답변을 작성합니다.
+콘텐츠 .md에 "이전 질문에 대한 답변" 섹션을 추가합니다.
 
-미응답 피드백(`answer`가 null)이 있으면:
-1. 각 질문에 대한 답변을 작성합니다 (2-5문장, 학술적 톤).
-2. 오늘의 콘텐츠 .md 파일 맨 끝, "참고 자료" 앞에 추가합니다:
+## 6단계: 퀴즈 (Day 5일 때만)
 
-```markdown
-## 이전 질문에 대한 답변
+해당 Day가 Day 5이면 같은 Week의 quiz yaml을 작성합니다 (10문제).
 
-> **Q (P1W1D3):** [질문 내용]
->
-> **A:** [답변. 관련 개념 설명 포함.]
-```
+## 7단계: 빌드 → main에 직접 커밋 → 푸시
 
-3. 피드백 JSON의 해당 항목에 `answer` 필드를 채웁니다.
-
-## 6단계: 퀴즈 (Week의 마지막 Day일 때만)
-
-해당 Day가 Day 5이면 같은 Week의 quiz yaml을 작성합니다.
-quiz 디렉토리도 없으면 생성합니다.
-
-10문제, 비율: 개념 4 + 적용/판단 3 + 비즈니스 3
-
-```yaml
-title: "Week N: [주제] 퀴즈"
-description: "설명"
-questions:
-  - id: "wNqM"
-    question: "질문"
-    type: "multiple_choice"
-    options: ["A", "B", "C", "D"]
-    answer: "0"
-    explanation: "해설"
-```
-
-## 7단계: 빌드와 배포
+**중요: PR을 만들지 않습니다. main에 직접 커밋합니다.**
 
 ```bash
 python build.py
 git add -A
-git commit -m "Day [N] 콘텐츠: [Day 제목]"
-git push
+git commit -m "Day N 콘텐츠: [Day 제목]"
+git push origin main
 ```
 
-## 8단계: 품질 자체 검증
+## 8단계: 검증
 
-빌드 후 확인:
-- [ ] .md 파일에 7개 섹션(개요~참고자료) 모두 존재
-- [ ] 4,000~6,000자 범위
-- [ ] 구체적 사례/수치 2개 이상
+- [ ] .md 파일에 7개 섹션 존재
+- [ ] 4,000~6,000자
+- [ ] 구체적 사례 2개+
 - [ ] 코드 블록 3개 이하
-- [ ] 이전 Day와 연결문 존재 (첫 Day 제외)
-- [ ] 과제가 구체적이고 실행 가능
-- [ ] build.py 성공, JSON 파일 생성 확인
-- [ ] 퀴즈 정답 인덱스가 옵션 범위 내 (Day 5인 경우)
+- [ ] build.py 성공
+- [ ] git push 성공 확인
